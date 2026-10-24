@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -50,14 +50,14 @@
         <h1>FABA Engine</h1>
         <div class="welcome-text" id="userDisplayWelcome">Smart AI Social Business Engine</div>
         <div class="badge-bar">
-            <span class="badge" id="statusBadge">🔓 ৭-দিনের ফ্রি ট্রায়াল (৫% ছাড় সহ)</span>
+            <span class="badge" id="statusBadge">🔓 7-Days Free Trial Active (5% OFF)</span>
         </div>
     </div>
 
     <!-- TAB 1: HOME -->
     <div id="tab-home" class="tab-content active">
         <div class="card">
-            <h3 style="margin-bottom: 10px; font-size: 15px; color: #38bdf8;">📝 সেলস এন্ট্রি ও এআই বিল মেকার</h3>
+            <h3 style="margin-bottom: 10px; font-size: 15px; color: #38bdf8;">📝 Sales Entry & AI Bill Maker</h3>
             <input type="text" id="custName" placeholder="Customer Name">
             <input type="tel" id="custPhone" placeholder="Phone Number">
             <input type="number" id="amount" placeholder="Amount (₹)">
@@ -66,21 +66,21 @@
                 <option value="cash">Cash</option>
                 <option value="udhar">Credit / Udhar</option>
             </select>
-            <button class="btn-main" onclick="addTransaction()">অটো বিল তৈরি করুন</button>
+            <button class="btn-main" onclick="addTransaction()">Generate Auto Bill</button>
         </div>
 
-        <h3 style="margin: 10px 0; font-size: 14px; color: #94a3b8;">আজকের হিসাব ও লেনদেন রেকর্ড:</h3>
+        <h3 style="margin: 10px 0; font-size: 14px; color: #94a3b8;">Today's Ledger & Records:</h3>
         <div id="listContainer"></div>
     </div>
 
     <!-- TAB 2: USER PROFILE -->
     <div id="tab-profile" class="tab-content">
         <div class="card">
-            <h3 style="color: #38bdf8; font-size: 15px; margin-bottom: 10px;">⚙️ প্রোফাইল তথ্য এডিট করুন</h3>
+            <h3 style="color: #38bdf8; font-size: 15px; margin-bottom: 10px;">⚙️ Edit Profile Information</h3>
             <input type="text" id="editName" placeholder="Your Name">
             <input type="email" id="editEmail" placeholder="Your Gmail">
             <input type="tel" id="editPhone" placeholder="Phone Number">
-            <button class="btn-main" onclick="saveUserProfile()">সেভ করুন 💾</button>
+            <button class="btn-main" onclick="saveUserProfile()">Save Profile 💾</button>
         </div>
 
         <div class="profile-box">
@@ -93,16 +93,16 @@
 
         <div class="refer-box">
             <h3 style="color: #38bdf8; font-size: 15px; margin-bottom: 6px;">🎁 Refer & Earn</h3>
-            <p style="font-size: 12px; color: #cbd5e1; line-height: 1.4;">বন্ধু অ্যাপ ডাউনলোড করে সাবস্ক্রিপশন কিনলে ২০% ছাড় পাবেন!</p>
+            <p style="font-size: 12px; color: #cbd5e1; line-height: 1.4;">Refer a friend who subscribes to get 20% OFF on your 1st buy and 5% ongoing royalty!</p>
             <div style="background: rgba(0,0,0,0.3); padding: 8px; border-radius: 8px; margin: 10px 0; font-weight: bold; color: #f59e0b;">YOUR CODE: FABA-REF-789</div>
-            <button class="btn-main" style="background: #38bdf8; color: #000; font-weight: bold;" onclick="shareReferral()">রেফারেল শেয়ার করুন 📲</button>
+            <button class="btn-main" style="background: #38bdf8; color: #000; font-weight: bold;" onclick="shareReferral()">Share Referral Link 📲</button>
         </div>
     </div>
 
     <!-- TAB 3: TOOLS -->
     <div id="tab-tools" class="tab-content">
         <div class="card">
-            <h3 style="margin-bottom: 12px; color: #38bdf8;">🛠️ ১০০+ এআই ও বিজনেস টুলস</h3>
+            <h3 style="margin-bottom: 12px; color: #38bdf8;">🛠️ 100+ AI & Business Tools Suite</h3>
             <button class="tool-btn" onclick="alert('Barcode Scanner Unlocked!')"><span>📷 1. Barcode Scanner</span> <span>🔓</span></button>
             <button class="tool-btn" onclick="alert('Stock Alert Unlocked!')"><span>📦 2. Stock Alert</span> <span>🔓</span></button>
             <button class="tool-btn" onclick="alert('GST Calculator Unlocked!')"><span>📊 3. GST & Tax Calculator</span> <span>🔓</span></button>
@@ -115,12 +115,12 @@
     <div id="tab-rewards" class="tab-content">
         <div class="pay-box">
             <h3>⚡ FABA Engine Pro Subscription</h3>
-            <p style="font-size: 12px; margin-top: 4px;">মূল্য: <span id="payPrice">₹599</span> / Year</p>
+            <p style="font-size: 12px; margin-top: 4px;">Price: <span id="payPrice">₹599</span> / Year</p>
             
             <input type="text" id="couponInput" placeholder="Enter Coupon Code" style="margin-top: 10px; text-align: center; color: #38bdf8; font-weight: bold;">
-            <button class="btn-main" style="background: #38bdf8; color: black; font-weight: bold; margin-top: 4px;" onclick="applyCoupon()">কুপন অ্যাপ্লাই করুন 🎟️</button>
+            <button class="btn-main" style="background: #38bdf8; color: black; font-weight: bold; margin-top: 4px;" onclick="applyCoupon()">Apply Coupon 🎟️</button>
 
-            <button class="pay-now-btn" onclick="buySubscription()">💳 সাবস্ক্রিপশন পেমেন্ট</button>
+            <button class="pay-now-btn" onclick="buySubscription()">💳 1-Click Subscription Payment</button>
             
             <div class="notice-banner" style="margin-top: 10px;">
                 🎁 Buy 12 Subscriptions, Get 1 Subscription FREE (Max 3 Times Claimable)!
@@ -128,9 +128,9 @@
         </div>
 
         <div class="card" style="text-align: center;">
-            <h3 style="color: #38bdf8; margin-bottom: 8px;">💎 লাকি স্ক্র্যাচ কার্ড</h3>
+            <h3 style="color: #38bdf8; margin-bottom: 8px;">💎 Lucky Scratch Card</h3>
             <div class="scratch-card" onclick="scratchRewardCard()">
-                <span id="scratchText">🎰 ৭-দিনের ফ্রিতে ৫% ছাড় পেতে এখানে ট্যাপ করুন 🎰</span>
+                <span id="scratchText">🎰 Tap to Scratch 7-Day Trial Coupon (5% OFF) 🎰</span>
             </div>
         </div>
     </div>
@@ -138,9 +138,9 @@
     <!-- TAB 5: OWNER ROOM -->
     <div id="tab-owner" class="tab-content">
         <div class="owner-card">
-            <h3>🔒 মাস্টার ওনার প্রাইভেট রুম</h3>
+            <h3>🔒 Master Owner Private Room</h3>
             <p style="font-size: 12px; color: #94a3b8; margin-top: 4px;">Protected by Master Owner Security (Only for Master)</p>
-            <button class="owner-btn" id="btnOwnerLogin" onclick="verifyOwnerCredentials()">প্রাইভেট রুমে প্রবেশ করুন</button>
+            <button class="owner-btn" id="btnOwnerLogin" onclick="verifyOwnerCredentials()">Enter Private Room</button>
             
             <div id="ownerDashboard">
                 <h4 style="color: #f43f5e; margin-bottom: 6px;">👑 Owner Control Panel</h4>
@@ -151,7 +151,7 @@
                     <h5 style="color: #38bdf8; margin-bottom: 4px;">🏦 Punjab National Bank (PNB):</h5>
                     <p>• Account: <strong id="displayPnbAcc">Not Set</strong></p>
                     <p>• IFSC: <strong id="displayPnbIfsc">PUNB0000000</strong></p>
-                    <button style="padding: 6px 10px; background: #10b981; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 6px;" onclick="editPnbDetails()">⚙️ Edit PNB</button>
+                    <button style="padding: 6px 10px; background: #10b981; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 6px;" onclick="editPnbDetails()">⚙️ Edit PNB Details</button>
                 </div>
                 <br>
                 <button style="padding: 6px 10px; background: #38bdf8; color: black; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;" onclick="ownerLogout()">🚪 Logout</button>
@@ -163,23 +163,23 @@
     <div class="bottom-nav">
         <button class="nav-item active" onclick="switchTab('tab-home', this)">
             <span class="nav-icon">🏠</span>
-            <span>হোম</span>
+            <span>Home</span>
         </button>
         <button class="nav-item" onclick="switchTab('tab-profile', this)">
             <span class="nav-icon">👤</span>
-            <span>প্রোফাইল</span>
+            <span>Profile</span>
         </button>
         <button class="nav-item" onclick="switchTab('tab-tools', this)">
             <span class="nav-icon">🛠️</span>
-            <span>টুলস</span>
+            <span>Tools</span>
         </button>
         <button class="nav-item" onclick="switchTab('tab-rewards', this)">
             <span class="nav-icon">⚡</span>
-            <span>প্রিমিয়াম</span>
+            <span>Rewards</span>
         </button>
         <button class="nav-item" onclick="switchTab('tab-owner', this)">
             <span class="nav-icon">👑</span>
-            <span>ওনার</span>
+            <span>Owner</span>
         </button>
     </div>
 </div>
@@ -220,14 +220,14 @@
         let email = document.getElementById('editEmail').value.trim();
         let phone = document.getElementById('editPhone').value.trim();
 
-        if(!name) { alert("নাম দিন!"); return; }
+        if(!name) { alert("Please enter your name!"); return; }
 
         localStorage.setItem('faba_user_name', name);
         localStorage.setItem('faba_user_email', email);
         localStorage.setItem('faba_user_phone', phone);
 
         loadUserProfile();
-        alert("✅ প্রোফাইল সেভ হয়েছে!");
+        alert("✅ Profile updated successfully!");
     }
 
     function switchTab(tabId, btnElement) {
@@ -242,19 +242,19 @@
         let trialClaimed = localStorage.getItem('faba_trial_scratch_used') === 'true';
         let isPro = localStorage.getItem('faba_pro_status') === 'active';
         let proClaimed = localStorage.getItem('faba_pro_scratch_used') === 'true';
-        let scratchText = document.getElementById('scratchText');
+        let scratchElement = document.getElementById('scratchText');
 
         if(isPro) {
             if(proClaimed) {
-                scratchText.innerText = "✅ Pro Scratch Card Already Claimed";
+                scratchElement.innerText = "✅ Pro Scratch Card Already Claimed";
             } else {
-                scratchText.innerText = "🎰 Tap to Scratch Pro Coupon (5% OFF) 🎰";
+                scratchElement.innerText = "🎰 Tap to Scratch Pro Coupon (5% OFF) 🎰";
             }
         } else {
             if(trialClaimed) {
-                scratchText.innerText = "✅ 7-Days Trial 5% Coupon Already Claimed";
+                scratchElement.innerText = "✅ 7-Day Trial 5% Coupon Already Claimed";
             } else {
-                scratchText.innerText = "🎰 Tap to Scratch 7-Days Trial Coupon (5% OFF) 🎰";
+                scratchElement.innerText = "🎰 Tap to Scratch 7-Day Trial Coupon (5% OFF) 🎰";
             }
         }
     }
@@ -265,16 +265,16 @@
         let proClaimed = localStorage.getItem('faba_pro_scratch_used') === 'true';
 
         if(!isPro && trialClaimed) {
-            alert("⚠️ আপনি ৭-দিনের ফ্রি ট্রায়ালের ৫% ছাড় একবারই নিয়েছেন!");
+            alert("⚠️ You have already claimed your 7-day trial 5% discount!");
             return;
         }
 
         if(isPro && proClaimed) {
-            alert("⚠️ আপনি এই সাবস্ক্রিপশনের জন্য কুপন একবারই ব্যবহার করেছেন!");
+            alert("⚠️ You have already used your coupon for this subscription cycle!");
             return;
         }
 
-        let couponCode = "LUCKY5"; // Fixed 5% discount coupon
+        let couponCode = "LUCKY5"; 
         
         if(!isPro) {
             localStorage.setItem('faba_trial_scratch_used', 'true');
@@ -285,17 +285,17 @@
         document.getElementById('scratchText').innerText = "🎉 COUPON: " + couponCode + " (5% OFF)";
         document.getElementById('couponInput').value = couponCode;
         checkScratchCardStatus();
-        alert("🎉 অভিনন্দন! আপনি ৫% ছাড়ের কুপন পেয়েছেন: " + couponCode);
+        alert("🎉 Congratulations! You won a 5% discount coupon: " + couponCode);
     }
 
     function applyCoupon() {
         let code = document.getElementById('couponInput').value.trim();
         if(code === "LUCKY5") {
-            let newPrice = Math.round(599 * 0.95); // 5% discount
+            let newPrice = Math.round(599 * 0.95); 
             document.getElementById('payPrice').innerText = "₹" + newPrice + " (5% OFF Applied)";
-            alert("✅ কুপন সফলভাবে অ্যাপ্লাই হয়েছে!");
+            alert("✅ Coupon applied successfully!");
         } else {
-            alert("ভুল বা মেয়াদোত্তীর্ণ কুপন কোড!");
+            alert("Invalid or expired coupon code!");
         }
     }
 
@@ -312,13 +312,13 @@
         let confirmBuy = confirm("Proceed payment of ₹599 to UPI: " + ownerUpi + " ?");
         if(confirmBuy) {
             localStorage.setItem('faba_pro_status', 'active');
-            localStorage.setItem('faba_pro_scratch_used', 'false'); // Unlock new scratch card for pro user
+            localStorage.setItem('faba_pro_scratch_used', 'false'); 
             
             let count = parseInt(localStorage.getItem('faba_sub_count') || "0") + 1;
             localStorage.setItem('faba_sub_count', count);
 
             checkScratchCardStatus();
-            alert("🎉 সাবস্ক্রিপশন সফল হয়েছে! প্রিমিয়াম স্ক্র্যাচ কার্ড আনলক করা হয়েছে।");
+            alert("🎉 Subscription activated successfully! Pro scratch card unlocked.");
         }
     }
 
@@ -351,15 +351,15 @@
     }
 
     function editPnbDetails() {
-        let acc = prompt("PNB Account Number:", pnbAcc);
-        let ifsc = prompt("PNB IFSC Code:", pnbIfsc);
+        let acc = prompt("Enter PNB Account Number:", pnbAcc);
+        let ifsc = prompt("Enter PNB IFSC Code:", pnbIfsc);
         if(acc && ifsc) {
             pnbAcc = acc; 
             pnbIfsc = ifsc;
             localStorage.setItem('faba_pnb_acc', pnbAcc);
             localStorage.setItem('faba_pnb_ifsc', pnbIfsc);
             loadUserProfile();
-            alert("PNB Updated!");
+            alert("PNB details updated successfully!");
         }
     }
 
@@ -369,7 +369,6 @@
         let item = document.getElementById('itemName').value;
         let type = document.getElementById('payType').value;
 
-        if(!name || !amount) { alert("Name & Amount required!"); return; }
+        if(!name || !amount) { alert("Customer Name & Amount are required!"); return; }
 
-        transactions.push({ name, amount, item, type, time: new Date().toLocaleTimeString() });
-        let container = document.getElementById('li
+        transactions.push({ name, amount, item, type, time: new Date().toLocaleTimeStri
