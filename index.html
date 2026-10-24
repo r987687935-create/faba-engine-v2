@@ -22,12 +22,6 @@
         body { background-color: #07090e; color: #f8fafc; padding-bottom: 75px; }
         .app-container { max-width: 480px; margin: 0 auto; background: #0f172a; min-height: 100vh; position: relative; }
 
-        /* TYPEWRITER SPLASH INTRO SCREEN (2 SECONDS) */
-        #splashScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #07090e, #1e1b4b, #0f172a); z-index: 4000; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; transition: opacity 0.4s ease; }
-        .splash-logo { width: 90px; height: 90px; background: linear-gradient(135deg, #0284c7, #7c3aed, #db2777); border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 45px; box-shadow: 0 10px 30px rgba(56,189,248,0.5); margin-bottom: 16px; border: 2px solid rgba(255,255,255,0.3); }
-        .splash-title { font-size: 26px; font-weight: 900; background: linear-gradient(to right, #38bdf8, #c084fc, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; min-height: 35px; }
-        .splash-subtitle { font-size: 13px; color: #94a3b8; font-weight: bold; letter-spacing: 0.5px; }
-
         #authModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.99); z-index: 3000; display: none; justify-content: center; align-items: center; padding: 20px; }
         .auth-card { background: #1e293b; border: 2px solid #38bdf8; border-radius: 20px; padding: 24px; text-align: center; max-width: 400px; width: 100%; box-shadow: 0 10px 30px rgba(56, 189, 248, 0.3); }
         .app-logo { width: 85px; height: 85px; margin: 0 auto 14px auto; background: linear-gradient(135deg, #0284c7, #7c3aed, #db2777); border-radius: 22px; display: flex; align-items: center; justify-content: center; font-size: 42px; box-shadow: 0 8px 25px rgba(56,189,248,0.4); border: 2px solid rgba(255,255,255,0.2); }
@@ -73,13 +67,6 @@
     </style>
 </head>
 <body>
-
-<!-- TYPEWRITER SPLASH INTRO SCREEN -->
-<div id="splashScreen">
-    <div class="splash-logo">💠</div>
-    <div class="splash-title" id="typewriterText"></div>
-    <div class="splash-subtitle" id="splashIntroText">For Your Easy Business</div>
-</div>
 
 <div id="authModal">
     <div class="auth-card">
@@ -245,54 +232,4 @@
         </button>
         <button class="nav-item" onclick="switchTab('tab-owner', this)">
             <span class="nav-icon">👑</span>
-            <span id="navOwner"></span>
-        </button>
-    </div>
-</div>
-
-<script>
-    let transactions = [];
-    let ownerUpi = "faba.engine.business@okaxis";
-    let pnbAcc = localStorage.getItem('faba_pnb_acc') || "Not Set";
-    let pnbIfsc = localStorage.getItem('faba_pnb_ifsc') || "PUNB0000000";
-    
-    let isAccessActive = true;
-    let currentPrice = 599;
-    let activeCouponCode = null;
-    let activeCouponDiscount = 0;
-    let myRefCodeGenerated = "FABA-REF-" + Math.floor(100 + Math.random() * 900);
-
-    const dict = {
-        bn: {
-            navHome: "হোম", navProfile: "প্রোফাইল", navTools: "টুলস", navPro: "প্রিমিয়াম", navOwner: "ওনার",
-            welcomeMsg: "Welcome to FABA Engine",
-            introText: "আপনার ব্যবসার সহজ সমাধানের জন্য",
-            authDesc: "প্রবেশ করতে বিবরণ দিন (স্থায়ীভাবে সেভ হবে):",
-            btnReg: "লগইন ও অ্যাকাউন্ট খুলুন 🚀",
-            billTitle: "📝 সেলস এন্ট্রি ও এআই বিল মেকার",
-            btnAddBill: "অটো বিল তৈরি করুন",
-            historyTitle: "আজকের হিসাব ও লেনদেন রেকর্ড:",
-            toolsTitle: "🛠️ ১০০+ ভরপুর এআই ও বিজনেস অ্যাপস",
-            proTitle: "⚡ FABA Engine Pro Subscription",
-            txtPriceLabel: "মূল্য",
-            btnApplyCoupon: "কুপন অ্যাপ্লাই করুন 🎟️",
-            btnPay: "💳 ১-ক্লিকে সাবস্ক্রিপশন পেমেন্ট",
-            notice12: "🎁 ১২ বার সাবস্ক্রিপশন কিনলে ১টি ফ্রি (সর্বোচ্চ ৩ বার)!",
-            couponTitle: "💎 লাকি স্ক্র্যাচ কার্ড",
-            scratchText: "🎰 এখানে ট্যাপ করে স্ক্র্যাচ করুন 🎰",
-            ownerTitle: "🔒 মাস্টার ওনার প্রাইভেট রুম",
-            ownerDesc: "সিক্রেট জিমেইল ও পিন (`Farhan2012`) দ্বারা সুরক্ষিত",
-            btnOwner: "প্রাইভেট রুমে প্রবেশ করুন",
-            referTitle: "🎁 Refer & Earn (২০% অফার)",
-            referDesc: "বন্ধু অ্যাপ ডাউনলোড করে সাবস্ক্রিপশন কিনলে আপনি পাবেন ১ম বার ২০% অফার এবং পরবর্তীতে ৫% রয়্যালটি!",
-            btnShareRef: "অনলিংক রেফার শেয়ার করুন 📲",
-            accStats: "📊 অ্যাকাউন্ট স্ট্যাটস ও মেম্বারশিপ",
-            trialBadge: "🔓 ৭-দিনের ফ্রি ট্রায়াল আনলকড",
-            lockedBadge: "🔒 ট্রায়াল শেষ! সাবস্ক্রিপশন প্রয়োজন",
-            proBadge: "⭐ PRO UNLOCKED"
-        },
-        en: {
-            navHome: "Home", navProfile: "Profile", navTools: "Tools", navPro: "Premium", navOwner: "Owner",
-            welcomeMsg: "Welcome to FABA Engine",
-            introText: "For Your Easy Business",
-            authDesc: "Enter details
+            <span id="
