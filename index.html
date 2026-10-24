@@ -94,7 +94,7 @@
         <div class="refer-box">
             <h3 style="color: #38bdf8; font-size: 15px; margin-bottom: 6px;">🎁 Refer & Earn</h3>
             <p style="font-size: 12px; color: #cbd5e1; line-height: 1.4;">Refer a friend who subscribes to get 20% OFF on your 1st buy and 5% ongoing royalty!</p>
-            <div style="background: rgba(0,0,0,0.3); padding: 8px; border-radius: 8px; margin: 10px 0; font-weight: bold; color: #f59e0b;">YOUR CODE: FABA-REF-789</div>
+            <div style="background: rgba(0,0,0,0.3); padding: 8px; border-radius: 8px; margin: 10px 0; font-weight: bold; color: #f59e0b;" id="myRefCode">YOUR CODE: FABA-REF-789</div>
             <button class="btn-main" style="background: #38bdf8; color: #000; font-weight: bold;" onclick="shareReferral()">Share Referral Link 📲</button>
         </div>
     </div>
@@ -185,10 +185,10 @@
 </div>
 
 <script>
-    let transactions = [];
-    let ownerUpi = "faba.engine.business@okaxis";
-    let pnbAcc = localStorage.getItem('faba_pnb_acc') || "Not Set";
-    let pnbIfsc = localStorage.getItem('faba_pnb_ifsc') || "PUNB0000000";
+    var transactions = [];
+    var ownerUpi = "faba.engine.business@okaxis";
+    var pnbAcc = localStorage.getItem('faba_pnb_acc') || "Not Set";
+    var pnbIfsc = localStorage.getItem('faba_pnb_ifsc') || "PUNB0000000";
 
     window.onload = function() {
         loadUserProfile();
@@ -197,9 +197,9 @@
     };
 
     function loadUserProfile() {
-        let name = localStorage.getItem('faba_user_name') || "Farhan";
-        let email = localStorage.getItem('faba_user_email') || "faba.engine@gmail.com";
-        let phone = localStorage.getItem('faba_user_phone') || "+91 9876543210";
+        var name = localStorage.getItem('faba_user_name') || "Farhan";
+        var email = localStorage.getItem('faba_user_email') || "faba.engine@gmail.com";
+        var phone = localStorage.getItem('faba_user_phone') || "+91 9876543210";
 
         document.getElementById('userDisplayWelcome').innerText = name;
         document.getElementById('profName').innerText = name;
@@ -216,9 +216,9 @@
     }
 
     function saveUserProfile() {
-        let name = document.getElementById('editName').value.trim();
-        let email = document.getElementById('editEmail').value.trim();
-        let phone = document.getElementById('editPhone').value.trim();
+        var name = document.getElementById('editName').value.trim();
+        var email = document.getElementById('editEmail').value.trim();
+        var phone = document.getElementById('editPhone').value.trim();
 
         if(!name) { alert("Please enter your name!"); return; }
 
@@ -231,38 +231,44 @@
     }
 
     function switchTab(tabId, btnElement) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        var tabs = document.getElementsByClassName('tab-content');
+        for(var i=0; i<tabs.length; i++) {
+            tabs[i].classList.remove('active');
+        }
+        var navs = document.getElementsByClassName('nav-item');
+        for(var j=0; j<navs.length; j++) {
+            navs[j].classList.remove('active');
+        }
         
         document.getElementById(tabId).classList.add('active');
         btnElement.classList.add('active');
     }
 
     function checkScratchCardStatus() {
-        let trialClaimed = localStorage.getItem('faba_trial_scratch_used') === 'true';
-        let isPro = localStorage.getItem('faba_pro_status') === 'active';
-        let proClaimed = localStorage.getItem('faba_pro_scratch_used') === 'true';
-        let scratchElement = document.getElementById('scratchText');
+        var trialClaimed = localStorage.getItem('faba_trial_scratch_used') === 'true';
+        var isPro = localStorage.getItem('faba_pro_status') === 'active';
+        var proClaimed = localStorage.getItem('faba_pro_scratch_used') === 'true';
+        var scratchBox = document.getElementById('scratchText');
 
         if(isPro) {
             if(proClaimed) {
-                scratchElement.innerText = "✅ Pro Scratch Card Already Claimed";
+                scratchBox.innerText = "✅ Pro Scratch Card Already Claimed";
             } else {
-                scratchElement.innerText = "🎰 Tap to Scratch Pro Coupon (5% OFF) 🎰";
+                scratchBox.innerText = "🎰 Tap to Scratch Pro Coupon (5% OFF) 🎰";
             }
         } else {
             if(trialClaimed) {
-                scratchElement.innerText = "✅ 7-Day Trial 5% Coupon Already Claimed";
+                scratchBox.innerText = "✅ 7-Day Trial 5% Coupon Already Claimed";
             } else {
-                scratchElement.innerText = "🎰 Tap to Scratch 7-Day Trial Coupon (5% OFF) 🎰";
+                scratchBox.innerText = "🎰 Tap to Scratch 7-Day Trial Coupon (5% OFF) 🎰";
             }
         }
     }
 
     function scratchRewardCard() {
-        let isPro = localStorage.getItem('faba_pro_status') === 'active';
-        let trialClaimed = localStorage.getItem('faba_trial_scratch_used') === 'true';
-        let proClaimed = localStorage.getItem('faba_pro_scratch_used') === 'true';
+        var isPro = localStorage.getItem('faba_pro_status') === 'active';
+        var trialClaimed = localStorage.getItem('faba_trial_scratch_used') === 'true';
+        var proClaimed = localStorage.getItem('faba_pro_scratch_used') === 'true';
 
         if(!isPro && trialClaimed) {
             alert("⚠️ You have already claimed your 7-day trial 5% discount!");
@@ -274,7 +280,7 @@
             return;
         }
 
-        let couponCode = "LUCKY5"; 
+        var couponCode = "LUCKY5"; 
         
         if(!isPro) {
             localStorage.setItem('faba_trial_scratch_used', 'true');
@@ -289,9 +295,9 @@
     }
 
     function applyCoupon() {
-        let code = document.getElementById('couponInput').value.trim();
+        var code = document.getElementById('couponInput').value.trim();
         if(code === "LUCKY5") {
-            let newPrice = Math.round(599 * 0.95); 
+            var newPrice = Math.round(599 * 0.95); 
             document.getElementById('payPrice').innerText = "₹" + newPrice + " (5% OFF Applied)";
             alert("✅ Coupon applied successfully!");
         } else {
@@ -300,7 +306,7 @@
     }
 
     function shareReferral() {
-        let text = "Download FABA Engine for Smart Business Tools! Use my code: FABA-REF-789 Link: https://faba-engine-v2.vercel.app";
+        var text = "Download FABA Engine for Smart Business Tools! Use my code: FABA-REF-789 Link: https://faba-engine-v2.vercel.app";
         if(navigator.share) {
             navigator.share({ title: 'FABA Engine', text: text, url: 'https://faba-engine-v2.vercel.app' });
         } else {
@@ -309,12 +315,12 @@
     }
 
     function buySubscription() {
-        let confirmBuy = confirm("Proceed payment of ₹599 to UPI: " + ownerUpi + " ?");
+        var confirmBuy = confirm("Proceed payment of ₹599 to UPI: " + ownerUpi + " ?");
         if(confirmBuy) {
             localStorage.setItem('faba_pro_status', 'active');
             localStorage.setItem('faba_pro_scratch_used', 'false'); 
             
-            let count = parseInt(localStorage.getItem('faba_sub_count') || "0") + 1;
+            var count = parseInt(localStorage.getItem('faba_sub_count') || "0") + 1;
             localStorage.setItem('faba_sub_count', count);
 
             checkScratchCardStatus();
@@ -323,8 +329,8 @@
     }
 
     function verifyOwnerCredentials() {
-        let email = prompt("Enter Owner Gmail ID:");
-        let pin = prompt("Enter Owner Secret PIN:");
+        var email = prompt("Enter Owner Gmail ID:");
+        var pin = prompt("Enter Owner Secret PIN:");
 
         if(email && pin === "Farhan2012") {
             localStorage.setItem('faba_owner_logged', 'true');
@@ -351,8 +357,8 @@
     }
 
     function editPnbDetails() {
-        let acc = prompt("Enter PNB Account Number:", pnbAcc);
-        let ifsc = prompt("Enter PNB IFSC Code:", pnbIfsc);
+        var acc = prompt("Enter PNB Account Number:", pnbAcc);
+        var ifsc = prompt("Enter PNB IFSC Code:", pnbIfsc);
         if(acc && ifsc) {
             pnbAcc = acc; 
             pnbIfsc = ifsc;
@@ -364,11 +370,25 @@
     }
 
     function addTransaction() {
-        let name = document.getElementById('custName').value;
-        let amount = document.getElementById('amount').value;
-        let item = document.getElementById('itemName').value;
-        let type = document.getElementById('payType').value;
+        var name = document.getElementById('custName').value;
+        var amount = document.getElementById('amount').value;
+        var item = document.getElementById('itemName').value;
+        var type = document.getElementById('payType').value;
 
         if(!name || !amount) { alert("Customer Name & Amount are required!"); return; }
 
-        transactions.push({ name, amount, item, type, time: new Date().toLocaleTimeStri
+        transactions.push({ name: name, amount: amount, item: item, type: type, time: new Date().toLocaleTimeString() });
+        var container = document.getElementById('listContainer');
+        container.innerHTML = '';
+        for(var k=0; k<transactions.length; k++) {
+            var t = transactions[k];
+            container.innerHTML += '<div style="background:#1e293b; padding:10px; border-radius:8px; margin-bottom:6px; font-size:13px;">👤 ' + t.name + ' - ₹' + t.amount + ' (' + t.type + ')</div>';
+        }
+
+        document.getElementById('custName').value = '';
+        document.getElementById('amount').value = '';
+        document.getElementById('itemName').value = '';
+    }
+</script>
+</body>
+</html>
