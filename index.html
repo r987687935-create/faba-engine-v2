@@ -4,25 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FABA Engine</title>
-    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,{
-        'name': 'FABA Engine',
-        'short_name': 'FABA',
-        'start_url': '/',
-        'display': 'standalone',
-        'background_color': '#07090e',
-        'theme_color': '#38bdf8',
-        'icons': [{
-            'src': 'https://img.icons8.com/color/192/artificial-intelligence.png',
-            'sizes': '192x192',
-            'type': 'image/png'
-        }]
-    }">
     <style>
         * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; }
         body { background-color: #07090e; color: #f8fafc; padding-bottom: 75px; }
         .app-container { max-width: 480px; margin: 0 auto; background: #0f172a; min-height: 100vh; position: relative; }
 
-        #authModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.99); z-index: 3000; display: none; justify-content: center; align-items: center; padding: 20px; }
+        #authModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.98); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 20px; }
         .auth-card { background: #1e293b; border: 2px solid #38bdf8; border-radius: 20px; padding: 24px; text-align: center; max-width: 400px; width: 100%; box-shadow: 0 10px 30px rgba(56, 189, 248, 0.3); }
         .app-logo { width: 85px; height: 85px; margin: 0 auto 14px auto; background: linear-gradient(135deg, #0284c7, #7c3aed, #db2777); border-radius: 22px; display: flex; align-items: center; justify-content: center; font-size: 42px; box-shadow: 0 8px 25px rgba(56,189,248,0.4); border: 2px solid rgba(255,255,255,0.2); }
         .auth-card h2 { font-size: 24px; color: #38bdf8; margin-bottom: 6px; font-weight: 900; }
@@ -72,40 +59,40 @@
     <div class="auth-card">
         <div class="app-logo">💠</div>
         <h2>FABA Engine</h2>
-        <p id="txtAuthDesc"></p>
+        <p id="txtAuthDesc">প্রবেশ করতে আপনার বিবরণ দিন:</p>
         
         <input type="text" id="regName" placeholder="Your Name">
         <input type="email" id="regEmail" placeholder="Your Gmail">
         <input type="tel" id="regPhone" placeholder="Phone Number">
         
-        <select id="regLang" onchange="changeLanguage(this.value)">
+        <select id="regLang">
             <option value="bn" selected>বাংলা (Bengali)</option>
             <option value="en">English</option>
             <option value="hi">हिंदी (Hindi)</option>
         </select>
 
-        <button class="btn-main" id="btnRegister" onclick="registerUser()"></button>
+        <button class="btn-main" onclick="registerUser()">লগইন ও অ্যাকাউন্ট খুলুন 🚀</button>
     </div>
 </div>
 
 <div class="app-container">
     <div class="header">
         <select class="lang-select-top" id="topLangSelector" onchange="changeLanguage(this.value)">
-            <option value="bn">BN</option>
-            <option value="en">EN</option>
-            <option value="hi">HI</option>
+            <option value="bn">বাংলা</option>
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
         </select>
         <h1>FABA Engine</h1>
         <div class="welcome-text" id="userDisplayWelcome">Smart AI Social Business Engine</div>
         <div class="badge-bar">
-            <span class="badge badge-unlocked" id="statusBadge">🔓 7-DAYS FREE TRIAL UNLOCKED</span>
+            <span class="badge badge-unlocked" id="statusBadge">🔓 ৭-দিনের ফ্রি ট্রায়াল আনলকড</span>
         </div>
     </div>
 
     <!-- TAB 1: HOME -->
     <div id="tab-home" class="tab-content active">
         <div class="card">
-            <h3 style="margin-bottom: 10px; font-size: 15px; color: #38bdf8;" id="txtBillingTitle"></h3>
+            <h3 style="margin-bottom: 10px; font-size: 15px; color: #38bdf8;" id="txtBillingTitle">📝 সেলস এন্ট্রি ও এআই বিল মেকার</h3>
             <input type="text" id="custName" placeholder="Customer Name">
             <input type="tel" id="custPhone" placeholder="Phone Number">
             <input type="number" id="amount" placeholder="Amount (₹)">
@@ -114,10 +101,10 @@
                 <option value="cash" id="optCash">Cash</option>
                 <option value="udhar" id="optCredit">Credit / Udhar</option>
             </select>
-            <button class="btn-main" id="btnAddBill" onclick="addTransaction()"></button>
+            <button class="btn-main" id="btnAddBill" onclick="addTransaction()">অটো বিল তৈরি করুন</button>
         </div>
 
-        <h3 style="margin: 10px 0; font-size: 14px; color: #94a3b8;" id="txtHistoryTitle"></h3>
+        <h3 style="margin: 10px 0; font-size: 14px; color: #94a3b8;" id="txtHistoryTitle">আজকের হিসাব ও লেনদেন রেকর্ড:</h3>
         <div id="listContainer"></div>
     </div>
 
@@ -132,14 +119,14 @@
         </div>
 
         <div class="refer-box">
-            <h3 style="color: #38bdf8; font-size: 15px; margin-bottom: 6px;" id="txtReferTitle">🎁 Refer & Earn</h3>
-            <p style="font-size: 12px; color: #cbd5e1; line-height: 1.4;" id="txtReferDesc"></p>
+            <h3 style="color: #38bdf8; font-size: 15px; margin-bottom: 6px;" id="txtReferTitle">🎁 Refer & Earn (২০% অফার)</h3>
+            <p style="font-size: 12px; color: #cbd5e1; line-height: 1.4;" id="txtReferDesc">বন্ধু অ্যাপ ডাউনলোড করে সাবস্ক্রিপশন কিনলে আপনি পাবেন ১ম বার ২০% অফার এবং পরবর্তীতে ৫% রয়্যালটি!</p>
             <div style="background: rgba(0,0,0,0.3); padding: 8px; border-radius: 8px; margin: 10px 0; font-weight: bold; color: #f59e0b;" id="myRefCode"></div>
-            <button class="btn-main" style="background: #38bdf8; color: #000; font-weight: bold;" id="btnShareRef" onclick="shareReferral()"></button>
+            <button class="btn-main" style="background: #38bdf8; color: #000; font-weight: bold;" id="btnShareRef" onclick="shareReferral()">রেফারেল লিংক শেয়ার করুন 📲</button>
         </div>
 
         <div class="card">
-            <h3 style="color: #38bdf8; font-size: 14px; margin-bottom: 8px;" id="txtAccStats"></h3>
+            <h3 style="color: #38bdf8; font-size: 14px; margin-bottom: 8px;" id="txtAccStats">📊 অ্যাকাউন্ট স্ট্যাটস ও মেম্বারশিপ</h3>
             <p style="font-size: 12px; color: #cbd5e1;">• Status: <span id="profPlanText" style="color: #10b981; font-weight: bold;">Active</span></p>
             <p style="font-size: 12px; color: #cbd5e1; margin-top: 4px;">• Subscription Count: <span id="subCount">0</span>/12</p>
         </div>
@@ -148,7 +135,7 @@
     <!-- TAB 3: TOOLS -->
     <div id="tab-tools" class="tab-content">
         <div class="card">
-            <h3 style="margin-bottom: 12px; color: #38bdf8;" id="txtToolsTitle"></h3>
+            <h3 style="margin-bottom: 12px; color: #38bdf8;" id="txtToolsTitle">🛠️ ১০০+ ভরপুর এআই ও বিজনেস অ্যাপস</h3>
             <button class="tool-btn" onclick="checkProFeature('Barcode Scanner')"><span>📷 1. Barcode Scanner</span> <span class="lock-status-icon">🔓</span></button>
             <button class="tool-btn" onclick="checkProFeature('Stock Alert')"><span>📦 2. Stock Alert</span> <span class="lock-status-icon">🔓</span></button>
             <button class="tool-btn" onclick="checkProFeature('GST Calculator')"><span>📊 3. GST & Tax Calculator</span> <span class="lock-status-icon">🔓</span></button>
@@ -165,23 +152,23 @@
     <!-- TAB 4: REWARDS -->
     <div id="tab-rewards" class="tab-content">
         <div class="pay-box">
-            <h3 id="txtProTitle"></h3>
-            <p style="font-size: 12px; margin-top: 4px;"><span id="txtPriceLabel">Price</span>: <span id="payPrice">₹599</span> / Year</p>
+            <h3 id="txtProTitle">⚡ FABA Engine Pro Subscription</h3>
+            <p style="font-size: 12px; margin-top: 4px;"><span id="txtPriceLabel">মূল্য</span>: <span id="payPrice">₹599</span> / Year</p>
             
             <input type="text" id="couponInput" placeholder="Enter Coupon Code" style="margin-top: 10px; text-align: center; color: #38bdf8; font-weight: bold;">
-            <button class="btn-main" style="background: #38bdf8; color: black; font-weight: bold; margin-top: 4px;" id="btnApplyCoupon" onclick="applyCoupon()"></button>
+            <button class="btn-main" style="background: #38bdf8; color: black; font-weight: bold; margin-top: 4px;" id="btnApplyCoupon" onclick="applyCoupon()">কুপন অ্যাপ্লাই করুন 🎟️</button>
 
-            <button class="pay-now-btn" id="btnPay" onclick="buySubscription()"></button>
+            <button class="pay-now-btn" id="btnPay" onclick="buySubscription()">💳 ১-ক্লিকে সাবস্ক্রিপশন পেমেন্ট</button>
             
             <div class="notice-banner" id="txt12TimesNotice">
-                🎁 Buy 12 Subscriptions, Get 1 Subscription FREE (Max 3 Times Claimable)!
+                🎁 ১২ বার সাবস্ক্রিপশন কিনলে ১টি ফ্রি (সর্বোচ্চ ৩ বার)!
             </div>
         </div>
 
         <div class="card" style="text-align: center;">
-            <h3 style="color: #38bdf8; margin-bottom: 8px;" id="txtCouponTitle"></h3>
+            <h3 style="color: #38bdf8; margin-bottom: 8px;" id="txtCouponTitle">💎 লাকি স্ক্র্যাচ কার্ড</h3>
             <div class="scratch-card" onclick="scratchRewardCard()">
-                <span id="scratchText">🎰 Tap to Scratch 🎰</span>
+                <span id="scratchText">🎰 এখানে ট্যাপ করে স্ক্র্যাচ করুন 🎰</span>
             </div>
             <div id="couponResult" style="font-weight: bold; color: #38bdf8;"></div>
         </div>
@@ -190,9 +177,9 @@
     <!-- TAB 5: OWNER ROOM -->
     <div id="tab-owner" class="tab-content">
         <div class="owner-card">
-            <h3 id="txtOwnerTitle"></h3>
-            <p style="font-size: 12px; color: #94a3b8; margin-top: 4px;" id="txtOwnerDesc"></p>
-            <button class="owner-btn" id="btnOwnerLogin" onclick="verifyOwnerCredentials()"></button>
+            <h3 id="txtOwnerTitle">🔒 মাস্টার ওনার প্রাইভেট রুম</h3>
+            <p style="font-size: 12px; color: #94a3b8; margin-top: 4px;" id="txtOwnerDesc">সিক্রেট জিমেইল ও পিন (`Farhan2012`) দ্বারা সুরক্ষিত</p>
+            <button class="owner-btn" id="btnOwnerLogin" onclick="verifyOwnerCredentials()">প্রাইভেট রুমে প্রবেশ করুন</button>
             
             <div id="ownerDashboard">
                 <h4 style="color: #f43f5e; margin-bottom: 6px;">👑 Owner Official Control Panel</h4>
@@ -216,20 +203,92 @@
     <div class="bottom-nav">
         <button class="nav-item active" onclick="switchTab('tab-home', this)">
             <span class="nav-icon">🏠</span>
-            <span id="navHome"></span>
+            <span id="navHome">হোম</span>
         </button>
         <button class="nav-item" onclick="switchTab('tab-profile', this)">
             <span class="nav-icon">👤</span>
-            <span id="navProfile"></span>
+            <span id="navProfile">প্রোফাইল</span>
         </button>
         <button class="nav-item" onclick="switchTab('tab-tools', this)">
             <span class="nav-icon">🛠️</span>
-            <span id="navTools"></span>
+            <span id="navTools">টুলস</span>
         </button>
         <button class="nav-item" onclick="switchTab('tab-rewards', this)">
             <span class="nav-icon">⚡</span>
-            <span id="navPro"></span>
+            <span id="navPro">প্রিমিয়াম</span>
         </button>
         <button class="nav-item" onclick="switchTab('tab-owner', this)">
             <span class="nav-icon">👑</span>
-            <span id="
+            <span id="navOwner">ওনার</span>
+        </button>
+    </div>
+</div>
+
+<script>
+    let transactions = [];
+    let ownerUpi = "faba.engine.business@okaxis";
+    let pnbAcc = localStorage.getItem('faba_pnb_acc') || "Not Set";
+    let pnbIfsc = localStorage.getItem('faba_pnb_ifsc') || "PUNB0000000";
+    
+    let isAccessActive = true;
+    let currentPrice = 599;
+    let activeCouponCode = null;
+    let activeCouponDiscount = 0;
+    let myRefCodeGenerated = "FABA-REF-" + Math.floor(100 + Math.random() * 900);
+
+    const dict = {
+        bn: {
+            navHome: "হোম", navProfile: "প্রোফাইল", navTools: "টুলস", navPro: "প্রিমিয়াম", navOwner: "ওনার",
+            authDesc: "প্রবেশ করতে আপনার বিবরণ দিন:",
+            btnReg: "লগইন ও অ্যাকাউন্ট খুলুন 🚀",
+            billTitle: "📝 সেলস এন্ট্রি ও এআই বিল মেকার",
+            btnAddBill: "অটো বিল তৈরি করুন",
+            historyTitle: "আজকের হিসাব ও লেনদেন রেকর্ড:",
+            toolsTitle: "🛠️ ১০০+ ভরপুর এআই ও বিজনেস অ্যাপস",
+            proTitle: "⚡ FABA Engine Pro Subscription",
+            txtPriceLabel: "মূল্য",
+            btnApplyCoupon: "কুপন অ্যাপ্লাই করুন 🎟️",
+            btnPay: "💳 ১-ক্লিকে সাবস্ক্রিপশন পেমেন্ট",
+            notice12: "🎁 ১২ বার সাবস্ক্রিপশন কিনলে ১টি ফ্রি (সর্বোচ্চ ৩ বার)!",
+            couponTitle: "💎 লাকি স্ক্র্যাচ কার্ড",
+            scratchText: "🎰 এখানে ট্যাপ করে স্ক্র্যাচ করুন 🎰",
+            ownerTitle: "🔒 মাস্টার ওনার প্রাইভেট রুম",
+            ownerDesc: "সিক্রেট জিমেইল ও পিন (`Farhan2012`) দ্বারা সুরক্ষিত",
+            btnOwner: "প্রাইভেট রুমে প্রবেশ করুন",
+            referTitle: "🎁 Refer & Earn (২০% অফার)",
+            referDesc: "বন্ধু অ্যাপ ডাউনলোড করে সাবস্ক্রিপশন কিনলে আপনি পাবেন ১ম বার ২০% অফার এবং পরবর্তীতে ৫% রয়্যালটি!",
+            btnShareRef: "অনলিংক রেফার শেয়ার করুন 📲",
+            accStats: "📊 অ্যাকাউন্ট স্ট্যাটস ও মেম্বারশিপ",
+            trialBadge: "🔓 ৭-দিনের ফ্রি ট্রায়াল আনলকড",
+            lockedBadge: "🔒 ট্রায়াল শেষ! সাবস্ক্রিপশন প্রয়োজন",
+            proBadge: "⭐ PRO UNLOCKED"
+        },
+        en: {
+            navHome: "Home", navProfile: "Profile", navTools: "Tools", navPro: "Premium", navOwner: "Owner",
+            authDesc: "Enter details to continue:",
+            btnReg: "Login & Create Account 🚀",
+            billTitle: "📝 Sales Entry & AI Bill Maker",
+            btnAddBill: "Generate Auto Bill",
+            historyTitle: "Today's Ledger & Records:",
+            toolsTitle: "🛠️ 100+ AI & Business Tools Suite",
+            proTitle: "⚡ FABA Engine Pro Subscription",
+            txtPriceLabel: "Price",
+            btnApplyCoupon: "Apply Coupon 🎟️",
+            btnPay: "💳 1-Click Subscription Payment",
+            notice12: "🎁 Buy 12 Subscriptions, Get 1 Subscription FREE (Max 3 Times)!",
+            couponTitle: "💎 Lucky Scratch Card",
+            scratchText: "🎰 Tap to Scratch 🎰",
+            ownerTitle: "🔒 Master Owner Private Room",
+            ownerDesc: "Protected by Secret Gmail & PIN (`Farhan2012`)",
+            btnOwner: "Enter Private Room",
+            referTitle: "🎁 Refer & Earn (20% Off)",
+            referDesc: "Refer a friend who subscribes to get 20% OFF on 1st buy and 5% ongoing royalty!",
+            btnShareRef: "Share Referral Link 📲",
+            accStats: "📊 Account Stats & Membership",
+            trialBadge: "🔓 7-DAYS FREE TRIAL UNLOCKED",
+            lockedBadge: "🔒 TRIAL EXPIRED! SUBSCRIPTION NEEDED",
+            proBadge: "⭐ PRO UNLOCKED"
+        },
+        hi: {
+            navHome: "होम", navProfile: "प्रोफाइल", navTools: "टूल्स", navPro: "प्रीमियम", navOwner: "ओनर",
+            authDesc: "प्रवेश करने के 
