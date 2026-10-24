@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FABA Engine - Global Business AI</title>
+    <style>
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; }
+        body { background-color: #07090e; color: #f8fafc; padding-bottom: 75px; }
+        .app-container { max-width: 480px; margin: 0 auto; background: #0f172a; min-height: 100vh; position: relative; }
+
+        /* Setup / Welcome Modal */
+        #welcomeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.98); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .modal-card { background: #1e293b; border: 2px solid #38bdf8; border-radius: 20px; padding: 24px; text-align: center; max-width: 400px; width: 100%; box-shadow: 0 10px 30px rgba(56, 189, 248, 0.2); }
+        .modal-card h2 { font-size: 22px; color: #38bdf8; margin-bottom: 8px; }
+        .modal-card p { font-size: 13px; color: #94a3b8; margin-bottom: 20px; }
+
+        /* Header */
+        .header { background: linear-gradient(135deg, #0f172a, #1e1b4b, #312e81); color: white; padding: 18px; text-align: center; border-bottom: 1px solid #1e293b; }
+        .header h1 { font-size: 24px; font-weight: 900; background: linear-gradient(to right, #38bdf8, #c084fc, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .welcome-text { font-size: 12px; color: #38bdf8; margin-top: 4px; }
+        .badge-bar { display: flex; justify-content: center; gap: 6px; margin-top: 8px; }
+        .badge { background: #334155; color: #38bdf8; font-size: 10px; font-weight: bold; padding: 3px 8px; border-radius: 20px; }
+        .badge-owner { background: #059669; color: white; }
+
+        /* Tab Layout */
+        .tab-content { display: none; padding: 14px; }
+        .tab-content.active { display: block; }
+
+        /* Controls & Form Elements */
+        .card { padding: 16px; background: #1e293b; border-radius: 18px; border: 1px solid #334155; margin-bottom: 14px; }
+        input, select { width: 100%; padding: 12px; margin: 6px 0; border: 1px solid #475569; border-radius: 10px; font-size: 14px; background: #0f172a; color: white; outline: none; }
+        .btn-main { width: 100%; padding: 14px; background: linear-gradient(135deg, #059669, #10b981); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 8px; }
+
+        /* Bottom Nav (YouTube Style) */
+        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #0f172a; border-top: 1px solid #334155; display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #94a3b8; font-size: 11px; border: none; background: none; cursor: pointer; width: 25%; }
+        .nav-item.active { color: #38bdf8; font-weight: bold; }
+        .nav-icon { font-size: 20px; margin-bottom: 2px; }
+
+        /* Feature Sections */
+        .voice-section { text-align: center; padding: 20px 0; }
+        .voice-btn { background: linear-gradient(135deg, #db2777, #9333ea); color: white; border: none; width: 70px; height: 70px; border-radius: 50%; font-size: 30px; cursor: pointer; box-shadow: 0 8px 25px rgba(219,39,119,0.5); }
+        .tool-btn { width: 100%; background: #1e293b; border: 1px solid #475569; color: #38bdf8; padding: 14px; border-radius: 12px; font-size: 14px; font-weight: bold; cursor: pointer; margin-bottom: 10px; text-align: left; }
+        .pay-box { background: linear-gradient(135deg, #065f46, #047857); padding: 16px; border-radius: 18px; text-align: center; color: white; margin-bottom: 14px; }
+        .pay-now-btn { width: 100%; background: #ffffff; color: #065f46; border: none; padding: 12px; font-weight: 900; border-radius: 12px; font-size: 14px; margin-top: 10px; cursor: pointer; }
+        .scratch-card-box { background: linear-gradient(135deg, #7c3aed, #4f46e5); color: white; padding: 18px; border-radius: 18px; text-align: center; margin-bottom: 14px; }
+        .scratch-btn { background: #ffffff; color: #4f46e5; border: none; padding: 10px 20px; font-weight: bold; border-radius: 20px; margin-top: 10px; cursor: pointer; }
+        .owner-card { background: #1e293b; padding: 18px; border-radius: 18px; border: 2px solid #f43f5e; text-align: center; }
+        .owner-btn { background: #f43f5e; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 10px; width: 100%; margin-top: 10px; cursor: pointer; }
+        #ownerDashboard { display: none; background: #0f172a; margin-top: 12px; padding: 14px; border-radius: 12px; border: 1px dashed #f43f5e; text-align: left; font-size: 12.5px; }
+        .transaction-item { background: #1e293b; padding: 12px; border-radius: 12px; margin-bottom: 8px; border: 1px solid #334155; font-size: 13px; }
+        .trans-header { display: flex; justify-content: space-between; font-weight: 700; color: #f1f5f9; }
+    </style>
+</head>
+<body>
+
+<!-- WELCOME & LANGUAGE SETUP MODAL -->
+<div id="welcomeModal">
+    <div class="modal-card">
+        <h2>🌐 FABA Engine Setup</h2>
+        <p id="setupSubtext">Choose Your Preferred Language & Business Type:</p>
+        
+        <select id="appLang" onchange="changeSetupLanguage()">
+            <option value="bn">১. বাংলা (Bengali)</option>
+            <option value="en" selected>2. English (Universal)</option>
+            <option value="hi">3. हिंदी (Hindi)</option>
+            <option value="es">4. Español (Spanish)</option>
+        </select>
+
+        <select id="bizCategory">
+            <option value="rice" id="optRice">🌾 Rice & Grain Wholesale</option>
+            <option value="jewel" id="optJewel">💎 Jewelry & Gold Shop</option>
+            <option value="grocery" id="optGrocery">🛒 Grocery & General Store</option>
+            <option value="cloth" id="optCloth">👕 Clothing & Garments</option>
+            <option value="hotel" id="optHotel">🍽️ Restaurant & Hotel</option>
+            <option value="all" id="optAll">🌐 All Businesses (Universal)</option>
+        </select>
+
+        <button class="btn-main" id="btnStartApp" onclick="finishSetup()">Start App 🚀</button>
+    </div>
+</div>
+
+<div class="app-container">
+    <!-- Header -->
+    <div class="header">
+        <h1>FABA Engine</h1>
+        <div class="welcome-text" id="bizTitleDisplay">Smart Solution For Your Business</div>
+        <div class="badge-bar">
+            <span class="badge badge-owner" id="ownerBadgeTxt">👑 OWNER LIFETIME UNLOCKED</span>
+        </div>
+    </div>
+
+    <!-- TAB 1: HOME -->
+    <div id="tab-home" class="tab-content active">
+        <div class="card">
+            <h3 style="margin-bottom: 10px; font-size: 15px; color: #38bdf8;" id="txtBillingTitle">📝 Smart Sale & Auto-Bill Entry</h3>
+            <input type="text" id="custName" placeholder="Customer Name">
+            <input type="tel" id="custPhone" placeholder="Customer WhatsApp Number">
+            <input type="number" id="amount" placeholder="Amount (₹)">
+            <input type="text" id="itemName" placeholder="Item Details (e.g. Rice, Gold, Cloth)">
+            <select id="type">
+                <option value="cash" id="optCash">Cash Sale</option>
+                <option value="udhar" id="optUdhar">Credit / Udhar</option>
+            </select>
+            <button class="btn-main" id="btnGenBill" onclick="addTransaction()">Generate Automatic Bill</button>
+        </div>
+
+        <h3 style="margin: 10px 0; font-size: 14px; color: #94a3b8;" id="txtRecordTitle">Today's Transactions & Records:</h3>
+        <div id="listContainer"></div>
+    </div>
+
+    <!-- TAB 2: TOOLS -->
+    <div id="tab-tools" class="tab-content">
+        <div class="card voice-section">
+            <h3 style="margin-bottom: 8px; color: #ec4899;" id="txtVoiceTitle">🎙️ AI Voice Engine</h3>
+            <p style="font-size: 12px; color: #94a3b8; margin-bottom: 15px;" id="txtVoiceSub">Speak to create auto billing entry</p>
+            <button class="voice-btn" onclick="startVoiceAssistance()">🎙️</button>
+        </div>
+
+        <div class="card">
+            <h3 style="margin-bottom: 12px; color: #38bdf8;" id="txtToolsTitle">🛠️ Advanced Business Tools</h3>
+            <button class="tool-btn" id="btnBarcode" onclick="openBarcodeScanner()">📷 1. Barcode Product Scanner</button>
+            <button class="tool-btn" id="btnStock" onclick="checkStockAlert()">📦 2. Warehouse Stock Alert Check</button>
+        </div>
+    </div>
+
+    <!-- TAB 3: REWARDS -->
+    <div id="tab-rewards" class="tab-content">
+        <div class="scratch-card-box">
+            <h3 id="txtRewardTitle">💎 Pro Subscription Discount Coupon</h3>
+            <p style="font-size: 12px; margin-top: 4px;" id="txtRewardSub">Win special discount coupons!</p>
+            <button class="scratch-btn" id="btnReveal" onclick="revealScratchCard()">Reveal Coupon</button>
+            <div id="rewardResult" style="margin-top:10px; display:none; background:rgba(0,0,0,0.3); padding:8px; border-radius:8px;"></div>
+        </div>
+
+        <div class="pay-box">
+            <h3 id="txtPayTitle">⚡ Premium Subscription Plan</h3>
+            <p style="font-size: 12px; margin-top: 4px;" id="txtPaySub">₹599 / Year (Direct Owner Bank)</p>
+            <button class="pay-now-btn" id="btnPayNow" onclick="processOwnerSubscriptionPayment()">💳 1-Click Subscription Payment</button>
+        </div>
+    </div>
+
+    <!-- TAB 4: OWNER ROOM -->
+    <div id="tab-owner" class="tab-content">
+        <div class="owner-card">
+            <h3 id="txtOwnerTitle">🔒 Master Owner Room & Bank Control</h3>
+            <p style="font-size: 12px; color: #94a3b8; margin-top: 4px;" id="txtOwnerSub">Secured via Owner Official Gmail</p>
+            <button class="owner-btn" id="btnEnterOwner" onclick="verifyOwnerAccess()">Enter Private Room (Owner Only)</button>
+            
+            <div id="ownerDashboard">
+                <h4 style="color: #f43f5e; margin-bottom:6px;" id="txtOwnerDashTitle">👑 Official Owner Control Panel</h4>
+                <p>• Owner Email: <strong id="displayOwnerEmail">faba.engine.business@gmail.com</strong></p>
+                <p>• Bank UPI Route: <strong id="displayOwnerUpi">faba.engine.business@okaxis</strong></p>
+                <br>
+                <button style="padding: 6px 10px; background: #38bdf8; color: black; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;" onclick="updateUpiDetails()">⚙️ Edit Bank UPI ID</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM NAV BAR (YouTube Style) -->
+    <div class="bottom-nav">
+        <button class="nav-item active" onclick="switchTab('tab-home', this)">
+            <span class="nav-icon">🏠</span>
+            <span id="navHome">Home</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('tab-tools', this)">
+            <span class="nav-icon">🎙️</span>
+            <span id="navTools">Tools</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('tab-rewards', this)">
+            <span class="nav-icon">🎁</span>
+            <span id="navRewards">Rewards</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('tab-owner', this)">
+            <span class="nav-icon">👑</span>
+            <span id="navOwner">Owner Room</span>
+        </button>
+    </div>
+</div>
+
+<script>
+    let transactions = [];
+    let currentOwnerUpi = "faba.engine.business@okaxis";
+
+    const translations = {
+        en: {
+            subtext: "Choose Your Preferred Language & Business Type:",
+            btnStart: "Start App 🚀",
+            optRice: "🌾 Rice & Grain Wholesale", optJewel: "💎 Jewelry & Gold Shop", optGrocery: "🛒 Grocery & General Store", optCloth: "👕 Clothing & Garments", optHotel: "🍽️ Restaurant & Hotel", optAll: "🌐 All Businesses (Universal)",
+            billingTitle: "📝 Smart Sale & Auto-Bill Entry", custName: "Customer Name", custPhone: "Customer WhatsApp Number", amount: "Amount (₹)", itemName: "Item Details (e.g. Rice, Gold, Cloth)", optCash: "Cash Sale", optUdhar: "Credit / Udhar", btnGenBill: "Generate Automatic Bill", recordTitle: "Today's Transactions & Records:",
+            voiceTitle: "🎙️ AI Voice Engine", voiceSub: "Speak to create auto billing entry", toolsTitle: "🛠️ Advanced Business Tools", btnBarcode: "📷 1. Barcode Product Scanner", btnStock: "📦 2. Warehouse Stock Alert Check",
+            rewardTitle: "💎 Pro Subscription Discount Coupon", rewardSub: "Win special discount coupons!", btnReveal: "Reveal Coupon", payTitle: "⚡ Premium Subscription Plan", paySub: "₹599 / Year (Direct Owner Bank)", btnPayNow: "💳 1-Click Subscription Payment",
+            ownerTitle: "🔒 Master Owner Room & Bank Control", ownerSub: "Secured via Owner Official Gmail", btnEnterOwner: "Enter Private Room (Owner Only)", ownerDashTitle: "👑 Official Owner Control Panel",
+            navHome: "Home", navTools: "Tools", navRewards: "Rewards", navOwner: "Owner Room"
+        },
+        bn: {
+            subtext: "পছন্দের ভাষা ও ব্যবসার ধরন নির্বাচন করুন:",
+            btnStart: "অ্যাপ শুরু করুন 🚀",
+            optRice: "🌾 চাল, শস্য ও আড়ত ব্যবসা", optJewel: "💎 সোনার দোকান ও জুয়েলারি", optGrocery: "🛒 মুদিখানা ও জেনারেল স্টোর", optCloth: "👕 কাপড়ের দোকান ও গার্মেন্টস", optHotel: "🍽️ রেস্তোরাঁ ও হোটেল", optAll: "🌐 অন্যান্য সব ব্যবসা (Universal)",
+            billingTitle: "📝 নতুন কেনাবেচা ও অটো-বিল এন্ট্রি", custName: "গ্রাহকের নাম", custPhone: "কাস্টমারের ওয়াটসঅ্যাপ নম্বর", amount: "টাকার পরিমাণ (₹)", itemName: "পণ্যের বিবরণ (যেমন: চাল, সোনা, পোশাক)", optCash: "নগদ পেমেন্ট (Cash)", optUdhar: "বাকি হিসাব (Udhar)", btnGenBill: "অটোমেটিক বিল তৈরি করুন", recordTitle: "আজকের লেনদেন ও রেকর্ড:",
+            voiceTitle: "🎙️ AI Voice Engine", voiceSub: "কথা বলে অটো-এন্ট্রি করুন", toolsTitle: "🛠️ অ্যাডভান্সড বিজনেস টুলস", btnBarcode: "📷 ১. বারকোড স্ক্যানার", btnStock: "📦 ২. স্টক অ্যালার্ট চেক",
+            rewardTitle: "💎 প্রিমিয়াম ডিসকাউন্ট কুপন", rewardSub: "বিশেষ ডিসকাউন্ট কুপন জিতুন!", btnReveal: "কুপন রিভিল করুন", payTitle: "⚡ প্রিমিয়াম সাবস্ক্রিপশন প্ল্যান", paySub: "₹৫৯৯ / বছর (Direct Owner Bank)", btnPayNow: "💳 ১-ক্লিকে সাবস্ক্রিপশন পেমেন্ট করুন",
+            ownerTitle: "🔒 মাস্টার ওনার প্রাইভেট রুম ও ব্যাংক কন্ট্রোল", ownerSub: "মালিকের অফিশিয়াল জিমেইল দিয়ে সুরক্ষিত", btnEnterOwner: "প্রাইভেট রুমে প্রবেশ করুন (Owner Only)", ownerDashTitle: "👑 ওনার অফিশিয়াল ব্যাকএন্ড কন্ট্রোল প্যানেল",
+            navHome: "হোম", navTools: "টুলস", navRewards: "অফার", navOwner: "ওনার রুম"
+        },
+        hi: {
+            subtext: "अपनी पसंदीदा भाषा और व्यवसाय का प्रकार चुनें:",
+            btnStart: "ऐप शुरू करें 🚀",
+            optRice: "🌾 चावल और अनाज का व्यापार", optJewel: "💎 आभूषण और सोने की दुकान", optGrocery: "🛒 किराना और जनरल स्टोर", optCloth: "👕 कपड़ों की दुकान", optHotel: "🍽️ रेस्तरां और होटल", optAll: "🌐 सभी व्यवसाय (Universal)",
+            billingTitle: "📝 नई बिक्री और ऑटो-बिल प्रविष्टि", custName: "ग्राहक का नाम", custPhone: "व्हाट्सएप नंबर", amount: "राशि (₹)", itemName: "सामग्री का विवरण (जैसे: चावल, सोना)", optCash: "नकद बिक्री", optUdhar: "उधार खाता", btnGenBill: "ऑटोमैटिक बिल बनाएं", recordTitle: "आज के लेन-देन और रिकॉर्ड:",
+            voiceTitle: "🎙️ AI Voice Engine", voiceSub: "बोलकर ऑटो बिलिंग एंट्री करें", toolsTitle: "🛠️ उन्नत व्यापार उपकरण", btnBarcode: "📷 1. बारकोड स्कैनर", btnStock: "📦 2. स्टॉक अलर्ट चेक",
+            rewardTitle: "💎 प्रीमियम छूट कूपन", rewardSub: "विशेष छूट कूपन जीतें!", btnReveal: "कूपन देखें", payTitle: "⚡ प्रीमियम सब्सक्रिप्शन प्लान", paySub: "₹599 / वर्ष (Direct Owner Bank)", btnPayNow: "💳 1-क्लिक सब्सक्रिप्शन भुगतान",
+            ownerTitle: "🔒 मास्टर ऑनर रूम और बैंक नियंत्रण", ownerSub: "ऑनर के आधिकारिक जीमेल द्वारा सुरक्षित", btnEnterOwner: "प्राइवेट रूम में प्रवेश करें (Owner Only)", ownerDashTitle: "👑 ऑनर कंट्रोल पैनल",
+            navHome: "होम", navTools: "टूल्स", navRewards: "ऑफ़र", navOwner: "ऑनर रूम"
+        },
+        es: {
+            subtext: "Elija su idioma y tipo de negocio preferidos:",
+            btnStart: "Iniciar aplicación 🚀",
+            optRice: "🌾 Venta al por mayor de arroz", optJewel: "💎 Joyería y tienda de oro", optGrocery: "🛒 Tienda de abarrotes", optCloth: "👕 Tienda de ropa", optHotel: "🍽️ Restaurante y hotel", optAll: "🌐 Todos los negocios (Universal)",
+            billingTitle: "📝 Venta inteligente y facturación", custName: "Nombre del cliente", custPhone: "Número de WhatsApp", amount: "Monto (₹)", itemName: "Detalles del artículo", optCash: "Venta al contado", optUdhar: "Crédito", btnGenBill: "Generar factura automática", recordTitle: "Transacciones de hoy:",
+            voiceTitle: "🎙️ AI Voice Engine", voiceSub: "Hable para crear una entrada", toolsTitle: "🛠️ Herramientas avanzadas", btnBarcode: "📷 1. Escáner de código de barras", btnStock: "📦 2. Alerta de inventario",
+            rewardTitle: "💎 Cupón de descuento", rewardSub: "¡Gana cupones especiales!", btnReveal: "Revelar cupón", payTitle: "⚡ Plan de suscripción Premium", paySub: "₹599 / Año (Direct Owner Bank)", btnPayNow: "💳 Pago de suscripción en 1 clic",
+            ownerTitle: "🔒 Sala de propietarios y control bancario", ownerSub: "Asegurado mediante Gmail oficial", btnEnterOwner: "Entrar a la sala privada", ownerDashTitle: "👑 Panel de control oficial",
+            navHome: "Inicio", navTools: "Herramientas", navRewards: "Ofertas", navOwner: "Propietario"
+        }
+    };
+
+    function changeSetupLanguage() {
+        let lang = document.getElementById('appLang').value;
+        let t = translations[lang];
+
+        document.getElementById('setupSubtext').innerText = t.subtext;
+        document.getElementById('btnStartApp').innerText = t.btnStart;
+        document.getElementById('optRice').innerText = t.optRice;
+        document.getElementById('optJewel').innerText = t.optJewel;
+        document.getElementById('optGrocery').innerText = t.optGrocery;
+        document.getElementById('optCloth').innerText = t.optCloth;
+        document.getElementById('optHotel').innerText = t.optHotel;
+        document.getElementById('optAll').innerText = t.optAll;
+
+        document.getElementById('txtBillingTitle').innerText = t.billingTitle;
+        document.getElementById('custName').placeholder = t.custName;
+        document.getElementById('custPhone').placeholder = t.custPhone;
+        document.getElementById('amount').placeholder = t.amount;
+        document.getElementById('itemName').placeholder = t.itemName;
+        document.getElementById('optCash').innerText = t.optCash;
+        document.getElementById('optUdhar').innerText = t.optUdhar;
+        document.getElementById('btnGenBill').innerText = t.btnGenBill;
+        document.getElementById('txtRecordTitle').innerText = t.recordTitle;
+
+        document.getElementById('txtVoiceTitle').innerText = t.voiceTitle;
+        document.getElementById('txtVoiceSub').innerText = t.voiceSub;
+        document.getElementById('txtToolsTitle').innerText = t.toolsTitle;
+        document.getElementById('btnBarcode').innerText = t.btnBarcode;
+        document.getElementById('btnStock').innerText = t.btnStock;
+
+        document.getElementById('txtRewardTitle').innerText = t.rewardTitle;
+        document.getElementById('txtRewardSub').innerText = t.rewardSub;
+        document.getElementById('btnReveal').innerText = t.btnReveal;
+        document.getElementById('txtPayTitle').innerText = t.payTitle;
+        document.getElementById('txtPaySub').innerText = t.paySub;
+        document.getElementById('btnPayNow').innerText = t.btnPayNow;
+
+        document.getElementById('txtOwnerTitle').innerText = t.ownerTitle;
+        document.getElementById('txtOwnerSub').innerText = t.ownerSub;
+        document.getElementById('btnEnterOwner').innerText = t.btnEnterOwner;
+        document.getElementById('txtOwnerDashTitle').innerText = t.ownerDashTitle;
+
+        document.getElementById('navHome').innerText = t.navHome;
+        document.getElementById('navTools').innerText = t.navTools;
+        document.getElementById('navRewards').innerText = t.navRewards;
+        document.getElementById('navOwner').innerText = t.navOwner;
+        
+        renderList();
+    }
+
+    function finishSetup() {
+        let categoryText = document.getElementById('bizCategory').options[document.getElementById('bizCategory').selectedIndex].text;
+        document.getElementById('bizTitleDisplay').innerText = categoryText;
+        document.getElementById('welcomeModal').style.display = 'none';
+    }
+
+    function switchTab(tabId, element) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        element.classList.add('active');
+    }
+
+    function addTransaction() {
+        let name = document.getElementById('custName').value;
+        let amount = document.getElementById('amount').value;
+        let item = document.getElementById('itemName').value;
+        let type = document.getElementById('type').value;
+
+        if(!name || !amount || !item) {
+            alert('Please fill all details!');
+            return;
+        }
+
+        transactions.push({ name, amount, item, type, time: new Date().toLocaleTimeString() });
+        document.getElementById('custName').value = '';
+        document.getElementById('amount').value = '';
+        document.getElementById('itemName').value = '';
+        renderList();
+    }
+
+    function renderList() {
+        let container = document.getElementById('listContainer');
+        container.innerHTML = '';
+        transactions.forEach((t) => {
+            let div = document.createElement('div');
+            div.className = 'transaction-item';
+            div.innerHTML = `<div class="trans-header"><span>${t.name}</span><span style="color:${t.type === 'cash' ? '#34d399' : '#f87171'}">₹${t.amount}</span></div><div style="font-size:11px; color:#94a3b8; margin-top:4px;">${t.item} • ${t.time}</div>`;
+            container.appendChild(div);
+        });
+    }
+
+    function processOwnerSubscriptionPayment() {
+        window.location.href = `upi://pay?pa=${currentOwnerUpi}&pn=FABA%20Owner&am=599&cu=INR`;
+    }
+
+    function verifyOwnerAccess() {
+        let userEmail = prompt("Enter Owner Official Email:");
+        let userPass = prompt("Enter Master Password:");
+        if (userEmail === "faba.engine.business@gmail.com" && userPass === "FARHAN777") {
+            alert("👑 Welcome Farhan Boss! Master Private Room Unlocked.");
+            document.getElementById('ownerDashboard').style.display = 'block';
+        } else {
+            alert("❌ Access Denied!");
+        }
+    }
+
+    function updateUpiDetails() {
+        let newUpi = prompt("Enter New Bank UPI ID:", currentOwnerUpi);
+        if(newUpi) {
+            currentOwnerUpi = newUpi;
+            document.getElementById('displayOwnerUpi').innerText = newUpi;
+            alert("✅ Bank UPI Updated Successfully!");
+        }
+    }
+
+    function startVoiceAssistance() { alert("🎙️ Voice Assistant Ready!"); }
+    function openBarcodeScanner() { alert("📷 Scanner Ready!"); }
+    function checkStockAlert() { alert("📦 Stock Check Complete!"); }
+    function revealScratchCard() {
+        let res = document.getElementById('rewardResult');
+        res.style.display = 'block';
+        res.innerHTML = "🏆 Coupon Code: <strong>FABA5 (5% OFF)</strong>";
+    }
+</script>
+</body>
+</html>
