@@ -1,393 +1,849 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FABA Engine</title>
+    <title>FABA Engine Enterprise V5 - Ultimate Master Pro</title>
     <style>
-        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; }
-        body { background-color: #07090e; color: #f8fafc; padding-bottom: 75px; }
-        .app-container { max-width: 480px; margin: 0 auto; background: #0f172a; min-height: 100vh; position: relative; }
+        :root {
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --primary-color: #dc2626;
+            --primary-dark: #991b1b;
+            --success-color: #10b981;
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
 
-        .header { background: linear-gradient(135deg, #0f172a, #1e1b4b, #312e81); color: white; padding: 18px; text-align: center; border-bottom: 1px solid #1e293b; position: relative; }
-        .header h1 { font-size: 24px; font-weight: 900; background: linear-gradient(to right, #38bdf8, #c084fc, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .welcome-text { font-size: 12px; color: #38bdf8; margin-top: 4px; }
-        .badge-bar { display: flex; justify-content: center; gap: 6px; margin-top: 8px; }
-        .badge { font-size: 10px; font-weight: bold; padding: 3px 8px; border-radius: 20px; background: #059669; color: white; }
+        /* DARK THEME */
+        body.theme-dark {
+            --bg-color: #0f172a;
+            --surface-color: #1e293b;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --primary-color: #ef4444;
+            --primary-dark: #dc2626;
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
 
-        .tab-content { display: none; padding: 14px; }
+        /* ROYAL GOLD THEME */
+        body.theme-gold {
+            --bg-color: #fffbeb;
+            --surface-color: #ffffff;
+            --text-color: #78350f;
+            --text-muted: #b45309;
+            --border-color: #fde68a;
+            --primary-color: #d97706;
+            --primary-dark: #b45309;
+            --card-shadow: 0 4px 20px rgba(217, 119, 6, 0.15);
+        }
+
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding-bottom: 95px; transition: background-color 0.3s, color 0.3s; }
+        .app-container { max-width: 480px; margin: 0 auto; background: var(--surface-color); min-height: 100vh; position: relative; border-left: 1px solid var(--border-color); border-right: 1px solid var(--border-color); box-shadow: var(--card-shadow); }
+        
+        /* TOP HEADER WITH TOP-LEFT PROFILE & SETTINGS */
+        .top-bar { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: white; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1100; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+        .top-left-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .avatar-circle { width: 40px; height: 40px; background: #ffffff; color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 17px; border: 2px solid rgba(255,255,255,0.8); }
+        .brand-info h1 { font-size: 16px; font-weight: 900; letter-spacing: 0.5px; }
+        .brand-info p { font-size: 10px; opacity: 0.9; }
+        
+        .top-actions { display: flex; align-items: center; gap: 8px; }
+        .settings-btn { background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.4); border-radius: 8px; padding: 6px 10px; font-size: 14px; cursor: pointer; color: white; }
+
+        /* CONTENT TABS */
+        .tab-content { display: none; padding: 14px; animation: fadeIn 0.2s ease-in-out; }
         .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-        .card { padding: 16px; background: #1e293b; border-radius: 18px; border: 1px solid #334155; margin-bottom: 14px; }
-        input, select { width: 100%; padding: 12px; margin: 6px 0; border: 1px solid #475569; border-radius: 10px; font-size: 14px; background: #0f172a; color: white; outline: none; }
-        .btn-main { width: 100%; padding: 14px; background: linear-gradient(135deg, #059669, #10b981); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 8px; }
+        /* CARDS & INPUTS */
+        .card { padding: 16px; background: var(--surface-color); border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 14px; box-shadow: var(--card-shadow); }
+        .card-title { font-size: 14px; font-weight: 800; color: var(--primary-color); margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+        .input-group { position: relative; margin-bottom: 10px; }
+        label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; }
+        input, select, textarea { width: 100%; padding: 11px 13px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 13.5px; background: var(--surface-color); color: var(--text-color); outline: none; transition: 0.2s; }
+        input:focus, select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
+        
+        .btn-main { width: 100%; padding: 13px; background: var(--primary-color); color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 800; cursor: pointer; margin-top: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: 0.2s; }
+        .btn-main:active { transform: scale(0.98); background: var(--primary-dark); }
 
-        .profile-box { background: linear-gradient(135deg, #1e1b4b, #312e81); border: 2px solid #6366f1; border-radius: 18px; padding: 16px; margin-bottom: 14px; text-align: center; }
-        .profile-avatar { width: 60px; height: 60px; background: #38bdf8; color: #0f172a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: bold; margin: 0 auto 10px auto; }
+        /* ITEM TILES & LEDGERS */
+        .item-tile { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 8px; }
+        .item-info h5 { font-size: 13px; color: var(--text-color); font-weight: 700; }
+        .item-info p { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+        .item-price { text-align: right; font-weight: 800; color: var(--success-color); font-size: 13.5px; }
 
-        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #0f172a; border-top: 1px solid #334155; display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: #94a3b8; font-size: 11px; border: none; background: none; cursor: pointer; width: 20%; }
-        .nav-item.active { color: #38bdf8; font-weight: bold; }
+        /* TOOLS SUITE GRID */
+        .tools-search { position: sticky; top: 65px; background: var(--surface-color); z-index: 10; padding-bottom: 8px; margin-bottom: 8px; }
+        .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-height: 420px; overflow-y: auto; padding-right: 2px; }
+        .tool-card { background: var(--bg-color); border: 1px solid var(--border-color); padding: 12px 6px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .tool-card:hover, .tool-card:active { border-color: var(--primary-color); transform: translateY(-2px); }
+        .tool-card span { font-size: 20px; display: block; margin-bottom: 4px; }
+        .tool-card h4 { font-size: 11px; color: var(--text-color); font-weight: 700; }
+        .tool-card p { font-size: 8px; color: var(--text-muted); }
+
+        .tool-panel { display: none; background: var(--surface-color); border: 2px solid var(--primary-color); padding: 16px; border-radius: 14px; margin-top: 14px; }
+
+        /* PREMIUM CARDS */
+        .prem-card { border: 2px solid var(--border-color); border-radius: 14px; padding: 14px; margin-bottom: 12px; background: var(--surface-color); position: relative; }
+        .prem-card.featured { border-color: var(--primary-color); background: var(--bg-color); }
+        .prem-badge { position: absolute; right: 12px; top: 12px; background: var(--primary-color); color: white; font-size: 9px; font-weight: bold; padding: 3px 9px; border-radius: 10px; }
+        .prem-price { font-size: 20px; font-weight: 900; color: var(--primary-color); margin: 6px 0; }
+
+        /* BOTTOM NAVIGATION */
+        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: var(--surface-color); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; box-shadow: 0 -4px 20px rgba(0,0,0,0.06); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 9.5px; border: none; background: none; cursor: pointer; flex: 1; }
+        .nav-item.active { color: var(--primary-color); font-weight: 800; transform: translateY(-2px); }
         .nav-icon { font-size: 18px; margin-bottom: 2px; }
 
-        .tool-btn { width: 100%; background: #1e293b; border: 1px solid #475569; color: #38bdf8; padding: 14px; border-radius: 12px; font-size: 13.5px; font-weight: bold; cursor: pointer; margin-bottom: 10px; text-align: left; display: flex; justify-content: space-between; align-items: center; }
-        .pay-box { background: linear-gradient(135deg, #065f46, #047857); padding: 16px; border-radius: 18px; text-align: center; color: white; margin-bottom: 14px; }
-        .pay-now-btn { width: 100%; background: #ffffff; color: #065f46; border: none; padding: 12px; font-weight: 900; border-radius: 12px; font-size: 14px; margin-top: 10px; cursor: pointer; }
-        
-        .scratch-card { background: linear-gradient(135deg, #f59e0b, #d97706); padding: 16px; border-radius: 16px; text-align: center; color: white; cursor: pointer; font-weight: bold; margin-bottom: 12px; border: 2px dashed #fef3c7; }
-        .refer-box { background: linear-gradient(135deg, #4338ca, #3730a3); padding: 16px; border-radius: 18px; border: 1px solid #818cf8; text-align: center; margin-bottom: 14px; }
-
-        .owner-card { background: #1e293b; padding: 18px; border-radius: 18px; border: 2px solid #f43f5e; text-align: center; }
-        .owner-btn { background: #f43f5e; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 10px; width: 100%; margin-top: 10px; cursor: pointer; }
-        #ownerDashboard { display: none; background: #0f172a; margin-top: 12px; padding: 14px; border-radius: 12px; border: 1px dashed #f43f5e; text-align: left; font-size: 12.5px; }
-        .notice-banner { background: #312e81; color: #f59e0b; padding: 10px; border-radius: 10px; font-size: 12px; text-align: center; margin-top: 10px; font-weight: bold; border: 1px solid #6366f1; }
+        /* MODALS */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); z-index: 2000; justify-content: center; align-items: center; padding: 16px; }
+        .modal-body { background: var(--surface-color); padding: 20px; border-radius: 18px; max-width: 400px; width: 100%; text-align: center; border: 2px solid var(--primary-color); max-height: 90vh; overflow-y: auto; }
+        .qr-card img { width: 180px; height: 180px; border-radius: 10px; border: 1px solid var(--border-color); margin: 10px auto; display: block; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <div class="header">
-        <h1>FABA Engine</h1>
-        <div class="welcome-text" id="userDisplayWelcome">Smart AI Social Business Engine</div>
-        <div class="badge-bar">
-            <span class="badge" id="statusBadge">🔓 7-Days Free Trial Active (5% OFF)</span>
+    
+    <!-- TOP HEADER -->
+    <div class="top-bar">
+        <div class="top-left-profile" onclick="switchTab('tab-profile', document.getElementById('navProf'))">
+            <div class="avatar-circle" id="headerAvatar">F</div>
+            <div class="brand-info">
+                <h1 id="headerShopName">FABA Store</h1>
+                <p id="headerOwnerName">Farhan (Pro Engine)</p>
+            </div>
+        </div>
+        <div class="top-actions">
+            <button class="settings-btn" title="App Settings" onclick="openSettingsModal()">⚙️ Settings</button>
+            <button class="settings-btn" title="Master Owner Room" onclick="openOwnerRoomModal()">👑</button>
         </div>
     </div>
 
-    <!-- TAB 1: HOME -->
+    <!-- TAB 1: HOME BILLING -->
     <div id="tab-home" class="tab-content active">
         <div class="card">
-            <h3 style="margin-bottom: 10px; font-size: 15px; color: #38bdf8;">📝 Sales Entry & AI Bill Maker</h3>
-            <input type="text" id="custName" placeholder="Customer Name">
-            <input type="tel" id="custPhone" placeholder="Phone Number">
-            <input type="number" id="amount" placeholder="Amount (₹)">
-            <input type="text" id="itemName" placeholder="Item Description">
-            <select id="payType">
-                <option value="cash">Cash</option>
-                <option value="udhar">Credit / Udhar</option>
-            </select>
-            <button class="btn-main" onclick="addTransaction()">Generate Auto Bill</button>
+            <div class="card-title">
+                <span>📝 Instant WhatsApp Billing</span>
+                <button style="padding:4px 8px; background:var(--primary-color); color:white; border:none; border-radius:6px; font-size:10px; cursor:pointer;" onclick="openCameraScanner()">📷 Scan Barcode</button>
+            </div>
+            <div class="input-group">
+                <label>Customer Name</label>
+                <input type="text" id="custName" placeholder="e.g. Rahat Ali">
+            </div>
+            <div class="input-group">
+                <label>WhatsApp Phone Number</label>
+                <input type="tel" id="custPhone" placeholder="e.g. +91 9876543210">
+            </div>
+            <div class="input-group">
+                <label>Total Amount (₹)</label>
+                <input type="number" id="custAmount" placeholder="0.00">
+            </div>
+            <div class="input-group">
+                <label>Payment Mode</label>
+                <select id="custPayType">
+                    <option value="cash">Cash (নগদ)</option>
+                    <option value="online">UPI Online (অনলাইন)</option>
+                    <option value="udhar">Udhar / Credit (বাকি)</option>
+                </select>
+            </div>
+            <button class="btn-main" onclick="generateAndSendInvoice()">Send Invoice on WhatsApp 📲</button>
         </div>
 
-        <h3 style="margin: 10px 0; font-size: 14px; color: #94a3b8;">Today's Ledger & Records:</h3>
-        <div id="listContainer"></div>
-    </div>
-
-    <!-- TAB 2: USER PROFILE -->
-    <div id="tab-profile" class="tab-content">
         <div class="card">
-            <h3 style="color: #38bdf8; font-size: 15px; margin-bottom: 10px;">⚙️ Edit Profile Information</h3>
-            <input type="text" id="editName" placeholder="Your Name">
-            <input type="email" id="editEmail" placeholder="Your Gmail">
-            <input type="tel" id="editPhone" placeholder="Phone Number">
-            <button class="btn-main" onclick="saveUserProfile()">Save Profile 💾</button>
-        </div>
-
-        <div class="profile-box">
-            <div class="profile-avatar" id="profAvatar">F</div>
-            <h2 id="profName" style="color: #ffffff; font-size: 18px;">Farhan</h2>
-            <p id="profEmail" style="color: #38bdf8; font-size: 12px; margin-top: 2px;">faba.engine@gmail.com</p>
-            <p id="profPhone" style="color: #94a3b8; font-size: 11px; margin-top: 2px;">+91 9876543210</p>
-            <div style="margin-top: 10px; font-size: 11px; background: rgba(255,255,255,0.1); padding: 6px; border-radius: 8px;">ID: FABA-2026</div>
-        </div>
-
-        <div class="refer-box">
-            <h3 style="color: #38bdf8; font-size: 15px; margin-bottom: 6px;">🎁 Refer & Earn</h3>
-            <p style="font-size: 12px; color: #cbd5e1; line-height: 1.4;">Refer a friend who subscribes to get 20% OFF on your 1st buy and 5% ongoing royalty!</p>
-            <div style="background: rgba(0,0,0,0.3); padding: 8px; border-radius: 8px; margin: 10px 0; font-weight: bold; color: #f59e0b;" id="myRefCode">YOUR CODE: FABA-REF-789</div>
-            <button class="btn-main" style="background: #38bdf8; color: #000; font-weight: bold;" onclick="shareReferral()">Share Referral Link 📲</button>
+            <div class="card-title">📊 Today's Sales Ledger</div>
+            <div id="homeSalesLedger"><p style="font-size:11px; color:var(--text-muted);">No sales recorded today.</p></div>
         </div>
     </div>
 
-    <!-- TAB 3: TOOLS -->
+    <!-- TAB 2: BULK CUSTOMER CRM & CONTACTS -->
+    <div id="tab-crm" class="tab-content">
+        <div class="card">
+            <div class="card-title">👥 Save Customer & Bulk WhatsApp</div>
+            <div class="input-group">
+                <label>Customer Full Name</label>
+                <input type="text" id="crmNewName" placeholder="Enter Name">
+            </div>
+            <div class="input-group">
+                <label>WhatsApp Number</label>
+                <input type="tel" id="crmNewPhone" placeholder="Enter Phone (with country code)">
+            </div>
+            <button class="btn-main" style="background:var(--success-color);" onclick="saveNewCustomerContact()">+ Save Contact 👥</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📢 Bulk WhatsApp Broadcast (Auto-Select)</div>
+            <div class="input-group">
+                <label>Broadcast Message Text</label>
+                <textarea id="bulkMessageText" rows="3" placeholder="Write promotional message or reminder here..."></textarea>
+            </div>
+            <div style="display:flex; gap:6px; margin-bottom:8px;">
+                <button style="flex:1; padding:8px; background:var(--primary-color); color:white; border:none; border-radius:8px; font-size:11px; font-weight:bold; cursor:pointer;" onclick="toggleSelectAllContacts(true)">Select All ✅</button>
+                <button style="flex:1; padding:8px; background:var(--border-color); color:var(--text-color); border:none; border-radius:8px; font-size:11px; font-weight:bold; cursor:pointer;" onclick="toggleSelectAllContacts(false)">Deselect All ❌</button>
+            </div>
+            <div id="customerContactsList" style="max-height:220px; overflow-y:auto; border:1px solid var(--border-color); border-radius:10px; padding:8px; margin-bottom:8px;">
+                <p style="font-size:11px; color:var(--text-muted);">No saved contacts yet.</p>
+            </div>
+            <button class="btn-main" onclick="sendBulkWhatsAppMessages()">🚀 Send Bulk WhatsApp to Selected</button>
+        </div>
+    </div>
+
+    <!-- TAB 3: GEMSTONE & STONE CALCULATOR -->
+    <div id="tab-stone" class="tab-content">
+        <div class="card">
+            <div class="card-title">💎 Gemstone & Marble Calculator</div>
+            <div class="input-group">
+                <label>Stone / Item Name</label>
+                <input type="text" id="stName" placeholder="e.g. Blue Sapphire, Granite Slab">
+            </div>
+            <div style="display:flex; gap:8px;">
+                <div class="input-group" style="flex:1;">
+                    <label>Weight / Quantity</label>
+                    <input type="number" id="stWeight" placeholder="0.00">
+                </div>
+                <div class="input-group" style="flex:1;">
+                    <label>Unit</label>
+                    <select id="stUnit">
+                        <option value="Carat">Carat (ক্যারেট)</option>
+                        <option value="Ratti">Ratti (রত্তি)</option>
+                        <option value="Gram">Gram (গ্রাম)</option>
+                        <option value="SqFt">Sq. Ft (স্কয়ার ফিট)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Rate Per Unit (₹)</label>
+                <input type="number" id="stRate" placeholder="0.00">
+            </div>
+            <button class="btn-main" style="background:var(--success-color);" onclick="calculateStoneRecord()">Calculate & Save Entry 💎</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">💎 Stone Ledger Records</div>
+            <div id="stoneLedgerContainer"><p style="font-size:11px; color:var(--text-muted);">No stone entries logged yet.</p></div>
+        </div>
+    </div>
+
+    <!-- TAB 4: MASTER PROFILE & SHOP SETUP -->
+    <div id="tab-profile" class="tab-content">
+        <div class="card" style="text-align:center; padding:24px 16px;">
+            <div class="avatar-circle" style="width:70px; height:70px; font-size:32px; margin:0 auto 12px auto; background:var(--primary-color); color:white;" id="profAvatarBig">F</div>
+            <h2 id="profDisplayShop" style="font-size:18px;">FABA Store</h2>
+            <p id="profDisplayName" style="font-size:13px; color:var(--primary-color); font-weight:bold; margin-top:2px;">Farhan</p>
+            <p id="profDisplayEmail" style="font-size:11px; color:var(--text-muted); margin-top:2px;">faba.engine@gmail.com</p>
+        </div>
+
+        <div class="card">
+            <div class="card-title">⚙️ Shop & Profile Setup</div>
+            <div class="input-group">
+                <label>Your Shop / Business Name</label>
+                <input type="text" id="editShopName" placeholder="e.g. Farhan Enterprise">
+            </div>
+            <div class="input-group">
+                <label>Owner Name</label>
+                <input type="text" id="editOwnerName" placeholder="e.g. Farhan">
+            </div>
+            <div class="input-group">
+                <label>Registered Gmail ID</label>
+                <input type="email" id="editEmail" readonly>
+            </div>
+            <div class="input-group">
+                <label>Phone Number</label>
+                <input type="tel" id="editPhone" placeholder="+91...">
+            </div>
+            <button class="btn-main" onclick="updateUserProfileData()">Save Profile & Shop 💾</button>
+        </div>
+
+        <div class="card" style="text-align:center;">
+            <div class="card-title">🎁 Your Unique Referral Link</div>
+            <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Share with friends and earn cash rewards!</p>
+            <div style="background:var(--bg-color); padding:10px; border-radius:8px; font-weight:bold; color:var(--primary-color); border:1px dashed var(--primary-color); margin-bottom:8px;" id="userRefCodeDisplay">FABA-REF-7892</div>
+            <button class="btn-main" onclick="shareReferralLink()">Share on WhatsApp 📲</button>
+        </div>
+    </div>
+
+    <!-- TAB 5: 30+ TOOLS SUITE -->
     <div id="tab-tools" class="tab-content">
         <div class="card">
-            <h3 style="margin-bottom: 12px; color: #38bdf8;">🛠️ 100+ AI & Business Tools Suite</h3>
-            <button class="tool-btn" onclick="alert('Barcode Scanner Unlocked!')"><span>📷 1. Barcode Scanner</span> <span>🔓</span></button>
-            <button class="tool-btn" onclick="alert('Stock Alert Unlocked!')"><span>📦 2. Stock Alert</span> <span>🔓</span></button>
-            <button class="tool-btn" onclick="alert('GST Calculator Unlocked!')"><span>📊 3. GST & Tax Calculator</span> <span>🔓</span></button>
-            <button class="tool-btn" onclick="alert('PDF Invoice Unlocked!')"><span>📑 4. HD PDF Invoice Generator</span> <span>🔓</span></button>
-            <button class="tool-btn" onclick="alert('Analytics Unlocked!')"><span>💰 5. Profit & Loss Analytics</span> <span>🔓</span></button>
+            <div class="tools-search">
+                <div class="card-title">🛠️ 30+ Enterprise Working Tools</div>
+                <input type="text" id="toolQueryInput" placeholder="🔍 Search among tools..." onkeyup="filterToolsGrid()">
+            </div>
+            
+            <div class="tools-grid" id="toolsGrid">
+                <div class="tool-card" onclick="triggerToolPanel('gst')"><span>📊</span><h4>GST Tax</h4><p>Tax Calc</p></div>
+                <div class="tool-card" onclick="triggerToolPanel('discount')"><span>🏷️</span><h4>Discount %</h4><p>Offer Calc</p></div>
+                <div class="tool-card" onclick="triggerToolPanel('cash')"><span>💵</span><h4>Cash Counter</h4><p>Notes Counter</p></div>
+                <div class="tool-card" onclick="triggerToolPanel('khata')"><span>📒</span><h4>Udhar Khata</h4><p>Credit Book</p></div>
+                <div class="tool-card" onclick="triggerToolPanel('unit')"><span>📐</span><h4>Unit Converter</h4><p>Kg to Gram</p></div>
+                <div class="tool-card" onclick="triggerToolPanel('profit')"><span>📈</span><h4>Margin %</h4><p>Profit Calc</p></div>
+                <div class="tool-card" onclick="triggerToolPanel('tags')"><span>🏷️</span><h4>Price Label</h4><p>Tag Maker</p></div>
+                <div class="tool-card" onclick="triggerToolPanel('qr')"><span>💳</span><h4>QR Code Gen</h4><p>UPI Creator</p></div>
+            </div>
+
+            <!-- TOOL PANELS -->
+            <div class="tool-panel" id="tPanel-gst">
+                <h4 style="color:var(--primary-color); margin-bottom:8px;">📊 GST Calculator</h4>
+                <input type="number" id="gstBase" placeholder="Base Price (₹)" style="margin-bottom:6px;">
+                <select id="gstPct" style="margin-bottom:6px;"><option value="5">5% GST</option><option value="12">12% GST</option><option value="18" selected>18% GST</option><option value="28">28% GST</option></select>
+                <button class="btn-main" onclick="execGstCalc()">Calculate 🧮</button>
+                <div id="resGst" style="margin-top:8px; font-weight:bold; color:var(--success-color); font-size:12px;"></div>
+            </div>
+
+            <div class="tool-panel" id="tPanel-discount">
+                <h4 style="color:var(--primary-color); margin-bottom:8px;">🏷️ Discount % Calculator</h4>
+                <input type="number" id="discOriginal" placeholder="Original MRP (₹)" style="margin-bottom:6px;">
+                <input type="number" id="discPercent" placeholder="Discount %" style="margin-bottom:6px;">
+                <button class="btn-main" onclick="execDiscountCalc()">Calculate Discount 🏷️</button>
+                <div id="resDisc" style="margin-top:8px; font-weight:bold; color:var(--success-color); font-size:12px;"></div>
+            </div>
+
+            <div class="tool-panel" id="tPanel-cash">
+                <h4 style="color:var(--primary-color); margin-bottom:8px;">💵 Daily Cash Counter</h4>
+                <input type="number" id="cnt500" placeholder="₹500 Notes Count" style="margin-bottom:4px;">
+                <input type="number" id="cnt200" placeholder="₹200 Notes Count" style="margin-bottom:4px;">
+                <input type="number" id="cnt100" placeholder="₹100 Notes Count" style="margin-bottom:4px;">
+                <button class="btn-main" onclick="execCashCounter()">Count Total Cash 💵</button>
+                <div id="resCash" style="margin-top:8px; font-weight:bold; color:var(--success-color); font-size:12px;"></div>
+            </div>
+
+            <div class="tool-panel" id="tPanel-khata">
+                <h4 style="color:var(--primary-color); margin-bottom:8px;">📒 Digital Udhar Khata</h4>
+                <input type="text" id="kName" placeholder="Customer Name" style="margin-bottom:4px;">
+                <input type="number" id="kAmt" placeholder="Due Amount (₹)" style="margin-bottom:4px;">
+                <button class="btn-main" onclick="execKhataSave()">Record Udhar Entry 📒</button>
+                <div id="resKhata" style="margin-top:8px; font-weight:bold; color:var(--success-color); font-size:12px;"></div>
+            </div>
+
+            <div class="tool-panel" id="tPanel-unit">
+                <h4 style="color:var(--primary-color); margin-bottom:8px;">📐 Unit Converter (Kg to Gram)</h4>
+                <input type="number" id="uKg" placeholder="Weight in Kg" style="margin-bottom:6px;">
+                <button class="btn-main" onclick="execUnitConvert()">Convert to Grams 📐</button>
+                <div id="resUnit" style="margin-top:8px; font-weight:bold; color:var(--success-color); font-size:12px;"></div>
+            </div>
+
+            <div class="tool-panel" id="tPanel-profit">
+                <h4 style="color:var(--primary-color); margin-bottom:8px;">📈 Profit Margin % Calculator</h4>
+                <input type="number" id="pCostPrice" placeholder="Purchase Cost (₹)" style="margin-bottom:4px;">
+                <input type="number" id="pSellPrice" placeholder="Selling Price (₹)" style="margin-bottom:4px;">
+                <button class="btn-main" onclick="execProfitCalc()">Calculate Margin 📈</button>
+                <div id="resProfit" style="margin-top:8px; font-weight:bold; color:var(--success-color); font-size:12px;"></div>
+            </div>
+
+            <div class="tool-panel" id="tPanel-tags">
+                <h4 style="color:var(--primary-color); margin-bottom:8px;">🏷️ Price Tag Generator</h4>
+                <input type="text" id="tagProduct" placeholder="Product Name" style="margin-bottom:4px;">
+                <input type="number" id="tagPrice" placeholder="Price (₹)" style="margin-bottom:4px;">
+                <button class="btn-main" onclick="execTagGen()">Generate Tag 🏷️</button>
+                <div id="resTag" style="margin-top:8px; font-weight:bold; color:var(--success-color); font-size:12px;"></div>
+            </div>
+
+            <div class="tool-panel" id="tPanel-qr">
+                <h4 style="color:var(--primary-color); margin-bottom:8px;">💳 Quick UPI QR Generator</h4>
+                <input type="text" id="qrUpiInput" placeholder="Enter UPI ID (e.g. name@upi)" style="margin-bottom:4px;">
+                <input type="number" id="qrAmountInput" placeholder="Amount (₹)" style="margin-bottom:4px;">
+                <button class="btn-main" onclick="execQrGen()">Generate UPI QR 💳</button>
+                <div id="resQr" style="margin-top:8px; text-align:center;"></div>
+            </div>
         </div>
     </div>
 
-    <!-- TAB 4: REWARDS -->
+    <!-- TAB 6: PREMIUM PLANS & SCRATCH CARD -->
     <div id="tab-rewards" class="tab-content">
-        <div class="pay-box">
-            <h3>⚡ FABA Engine Pro Subscription</h3>
-            <p style="font-size: 12px; margin-top: 4px;">Price: <span id="payPrice">₹599</span> / Year</p>
-            
-            <input type="text" id="couponInput" placeholder="Enter Coupon Code" style="margin-top: 10px; text-align: center; color: #38bdf8; font-weight: bold;">
-            <button class="btn-main" style="background: #38bdf8; color: black; font-weight: bold; margin-top: 4px;" onclick="applyCoupon()">Apply Coupon 🎟️</button>
-
-            <button class="pay-now-btn" onclick="buySubscription()">💳 1-Click Subscription Payment</button>
-            
-            <div class="notice-banner" style="margin-top: 10px;">
-                🎁 Buy 12 Subscriptions, Get 1 Subscription FREE (Max 3 Times Claimable)!
+        <div class="card" style="text-align:center;">
+            <div class="card-title">🎁 Scratch Card & Discount Coupon</div>
+            <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Scratch below to win 5% to 20% instant discount on plans!</p>
+            <div id="scratchCardArea" onclick="scratchTheCard()" style="background:linear-gradient(135deg, #cbd5e1, #94a3b8); padding:20px; border-radius:12px; font-weight:bold; color:#0f172a; cursor:pointer; margin-bottom:8px;">
+                🎮 TAP TO SCRATCH & WIN DISCOUNT!
             </div>
+            <div id="scratchResult" style="font-size:12px; font-weight:bold; color:var(--success-color);"></div>
         </div>
 
-        <div class="card" style="text-align: center;">
-            <h3 style="color: #38bdf8; margin-bottom: 8px;">💎 Lucky Scratch Card</h3>
-            <div class="scratch-card" onclick="scratchRewardCard()">
-                <span id="scratchText">🎰 Tap to Scratch 7-Day Trial Coupon (5% OFF) 🎰</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- TAB 5: OWNER ROOM -->
-    <div id="tab-owner" class="tab-content">
-        <div class="owner-card">
-            <h3>🔒 Master Owner Private Room</h3>
-            <p style="font-size: 12px; color: #94a3b8; margin-top: 4px;">Protected by Master Owner Security (Only for Master)</p>
-            <button class="owner-btn" id="btnOwnerLogin" onclick="verifyOwnerCredentials()">Enter Private Room</button>
+        <div class="card">
+            <div class="card-title">⚡ Enterprise Subscription Plans</div>
             
-            <div id="ownerDashboard">
-                <h4 style="color: #f43f5e; margin-bottom: 6px;">👑 Owner Control Panel</h4>
-                <p>• Owner Email: <strong id="ownerLoggedEmail">faba.engine.business@gmail.com</strong></p>
-                <p>• Bank UPI ID: <strong id="displayUpi">faba.engine.business@okaxis</strong></p>
-                
-                <div style="margin-top: 10px; padding: 10px; background: #1e293b; border-radius: 10px; border: 1px solid #334155;">
-                    <h5 style="color: #38bdf8; margin-bottom: 4px;">🏦 Punjab National Bank (PNB):</h5>
-                    <p>• Account: <strong id="displayPnbAcc">Not Set</strong></p>
-                    <p>• IFSC: <strong id="displayPnbIfsc">PUNB0000000</strong></p>
-                    <button style="padding: 6px 10px; background: #10b981; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 6px;" onclick="editPnbDetails()">⚙️ Edit PNB Details</button>
-                </div>
-                <br>
-                <button style="padding: 6px 10px; background: #38bdf8; color: black; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;" onclick="ownerLogout()">🚪 Logout</button>
+            <div class="prem-card">
+                <div class="prem-badge">STANDARD</div>
+                <h4>Standard Edition</h4>
+                <div class="prem-price">₹499 <span style="font-size:11px; color:var(--text-muted);">/ Month</span></div>
+                <p style="font-size:11px; color:var(--text-muted);">Core WhatsApp Billing + 100 Contacts CRM</p>
+                <button class="btn-main" style="margin-top:8px;" onclick="triggerSubscriptionCheckout(499, 'Standard Edition')">Select Standard ₹499 💳</button>
+            </div>
+
+            <div class="prem-card featured">
+                <div class="prem-badge">POPULAR</div>
+                <h4>Premium+ Suite</h4>
+                <div class="prem-price">₹899 <span style="font-size:11px; color:var(--text-muted);">/ Month</span></div>
+                <p style="font-size:11px; color:var(--text-muted);">Unlimited Bulk WhatsApp + All 30+ Tools + Stone Calculator</p>
+                <button class="btn-main" style="margin-top:8px;" onclick="triggerSubscriptionCheckout(899, 'Premium+ Suite')">Select Premium+ ₹899 💳</button>
+            </div>
+
+            <div class="prem-card">
+                <div class="prem-badge">YEARLY</div>
+                <h4>Legendary Enterprise</h4>
+                <div class="prem-price">₹4,999 <span style="font-size:11px; color:var(--text-muted);">/ Year</span></div>
+                <p style="font-size:11px; color:var(--text-muted);">Full Year Unlocked + Priority Support + Multi-Staff Access</p>
+                <button class="btn-main" style="margin-top:8px;" onclick="triggerSubscriptionCheckout(4999, 'Legendary Enterprise')">Select Legendary ₹4,999 💳</button>
             </div>
         </div>
     </div>
 
-    <!-- BOTTOM NAVIGATION -->
+    <!-- BOTTOM NAVIGATION BAR -->
     <div class="bottom-nav">
-        <button class="nav-item active" onclick="switchTab('tab-home', this)">
-            <span class="nav-icon">🏠</span>
-            <span>Home</span>
-        </button>
-        <button class="nav-item" onclick="switchTab('tab-profile', this)">
-            <span class="nav-icon">👤</span>
-            <span>Profile</span>
-        </button>
-        <button class="nav-item" onclick="switchTab('tab-tools', this)">
-            <span class="nav-icon">🛠️</span>
-            <span>Tools</span>
-        </button>
-        <button class="nav-item" onclick="switchTab('tab-rewards', this)">
-            <span class="nav-icon">⚡</span>
-            <span>Rewards</span>
-        </button>
-        <button class="nav-item" onclick="switchTab('tab-owner', this)">
-            <span class="nav-icon">👑</span>
-            <span>Owner</span>
-        </button>
+        <button class="nav-item active" onclick="switchTab('tab-home', this)"><span class="nav-icon">🏠</span><span>Home</span></button>
+        <button class="nav-item" onclick="switchTab('tab-crm', this)"><span class="nav-icon">👥</span><span>CRM</span></button>
+        <button class="nav-item" onclick="switchTab('tab-stone', this)"><span class="nav-icon">💎</span><span>Stone</span></button>
+        <button class="nav-item" id="navProf" onclick="switchTab('tab-profile', this)"><span class="nav-icon">⚙️</span><span>Profile</span></button>
+        <button class="nav-item" onclick="switchTab('tab-tools', this)"><span class="nav-icon">🛠️</span><span>Tools</span></button>
+        <button class="nav-item" onclick="switchTab('tab-rewards', this)"><span class="nav-icon">👑</span><span>Premium</span></button>
+    </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal" id="settingsModal">
+    <div class="modal-body" style="text-align:left;">
+        <h3 style="color:var(--primary-color); margin-bottom:10px;">⚙️ App Settings & Customization</h3>
+        <div class="input-group">
+            <label>Select Interface Theme</label>
+            <select id="themeSelector" onchange="changeAppTheme()">
+                <option value="light">Classic Light (ডিফল্ট)</option>
+                <option value="dark">Pro Dark Mode (ডার্ক থিম)</option>
+                <option value="gold">Royal Gold Theme (গোল্ড থিম)</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label>App Language</label>
+            <select id="appLangSelector">
+                <option value="bn">বাংলা (Bengali)</option>
+                <option value="en">English</option>
+                <option value="hi">हिन्दी (Hindi)</option>
+            </select>
+        </div>
+        <button class="btn-main" onclick="closeSettingsModal()">Save & Apply Settings 💾</button>
+        <button style="background:none; border:none; color:var(--text-muted); font-size:11px; margin-top:10px; cursor:pointer; width:100%; text-align:center;" onclick="closeSettingsModal()">Close</button>
+    </div>
+</div>
+
+<!-- PAYMENT GATEWAY MODAL -->
+<div class="modal" id="payModal">
+    <div class="modal-body">
+        <h3 style="color:var(--primary-color); margin-bottom:4px;">💳 Secure UPI Checkout</h3>
+        <p id="checkoutPlanTitle" style="font-size:12px; font-weight:bold; color:var(--text);"></p>
+        
+        <div class="qr-card">
+            <img id="checkoutQrImg" src="" alt="Payment QR">
+        </div>
+
+        <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Scan QR with GPay, PhonePay, Paytm or any UPI App</p>
+        
+        <a id="checkoutDirectUpiBtn" href="#" class="btn-main" style="display:block; text-decoration:none; margin-top:8px;">Open UPI App to Pay 📲</a>
+        <button style="background:none; border:none; color:var(--primary-color); font-size:11px; margin-top:10px; cursor:pointer;" onclick="closePaymentModal()">Cancel Transaction</button>
+    </div>
+</div>
+
+<!-- STRICT OWNER PRIVATE ROOM MODAL -->
+<div class="modal" id="ownerAuthModal">
+    <div class="modal-body">
+        <h3 style="color:var(--primary-color); margin-bottom:6px;">🔒 Master Owner Private Room</h3>
+        <p style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">Protected System Login</p>
+        
+        <div id="ownerLoginForm">
+            <input type="email" id="ownerEmailInput" placeholder="Master Owner Gmail ID" style="margin-bottom:6px;">
+            <input type="password" id="ownerPinInput" placeholder="Master Secret PIN" style="margin-bottom:8px;">
+            <button class="btn-main" onclick="authenticateMasterOwner()">Authenticate Access 👑</button>
+            <button style="background:none; border:none; color:var(--text-muted); font-size:11px; margin-top:10px; cursor:pointer;" onclick="closeOwnerModal()">Close Window</button>
+        </div>
+
+        <div id="ownerDashboardPanel" style="display:none; text-align:left;">
+            <h4 style="color:var(--success-color); margin-bottom:8px;">👑 Master Control Active</h4>
+            <p style="font-size:11px;">Owner: <strong id="ownerNameDisplay">Farhan</strong></p>
+            <p style="font-size:11px;">Payment UPI: <strong id="ownerCurrentUpiDisplay">Not Set</strong></p>
+            <br>
+            <button class="btn-main" style="background:var(--success-color);" onclick="configureOwnerUpiDetails()">⚙️ Update Receiving UPI ID</button>
+            <button class="btn-main btn-secondary" onclick="logoutMasterOwner()">Logout Master Session 🚪</button>
+        </div>
     </div>
 </div>
 
 <script>
-    var transactions = [];
-    var ownerUpi = "faba.engine.business@okaxis";
-    var pnbAcc = localStorage.getItem('faba_pnb_acc') || "Not Set";
-    var pnbIfsc = localStorage.getItem('faba_pnb_ifsc') || "PUNB0000000";
+    /* GLOBAL DATA STRUCTURES */
+    var salesRecords = [];
+    var stoneRecords = [];
+    var customerContacts = [];
+    var masterOwnerUpi = localStorage.getItem('faba_master_upi') || "farhan@upi";
+    var scratchDiscountPercent = 0;
 
     window.onload = function() {
-        loadUserProfile();
-        checkOwnerSession();
-        checkScratchCardStatus();
+        verifyDeviceBinding();
+        syncUserProfile();
+        loadSavedContacts();
+        loadSavedTheme();
     };
 
-    function loadUserProfile() {
-        var name = localStorage.getItem('faba_user_name') || "Farhan";
+    function verifyDeviceBinding() {
+        var bound = localStorage.getItem('faba_device_bound');
+        if(!bound) {
+            var email = prompt("🔒 Security Binding: Enter your primary Gmail ID to bind this device:");
+            if(email) {
+                localStorage.setItem('faba_device_bound', email);
+                localStorage.setItem('faba_user_email', email);
+            }
+        }
+    }
+
+    function syncUserProfile() {
+        var shop = localStorage.getItem('faba_shop_name') || "FABA Store";
+        var name = localStorage.getItem('faba_owner_name') || "Farhan";
         var email = localStorage.getItem('faba_user_email') || "faba.engine@gmail.com";
         var phone = localStorage.getItem('faba_user_phone') || "+91 9876543210";
 
-        document.getElementById('userDisplayWelcome').innerText = name;
-        document.getElementById('profName').innerText = name;
-        document.getElementById('profEmail').innerText = email;
-        document.getElementById('profPhone').innerText = phone;
-        document.getElementById('profAvatar').innerText = name.charAt(0).toUpperCase();
-
-        document.getElementById('editName').value = name;
+        document.getElementById('headerShopName').innerText = shop;
+        document.getElementById('headerOwnerName').innerText = name + " (Pro)";
+        document.getElementById('headerAvatar').innerText = shop.charAt(0).toUpperCase();
+        document.getElementById('profAvatarBig').innerText = shop.charAt(0).toUpperCase();
+        document.getElementById('profDisplayShop').innerText = shop;
+        document.getElementById('profDisplayName').innerText = name;
+        document.getElementById('profDisplayEmail').innerText = email;
+        
+        document.getElementById('editShopName').value = shop;
+        document.getElementById('editOwnerName').value = name;
         document.getElementById('editEmail').value = email;
         document.getElementById('editPhone').value = phone;
-
-        document.getElementById('displayPnbAcc').innerText = pnbAcc;
-        document.getElementById('displayPnbIfsc').innerText = pnbIfsc;
     }
 
-    function saveUserProfile() {
-        var name = document.getElementById('editName').value.trim();
-        var email = document.getElementById('editEmail').value.trim();
+    function updateUserProfileData() {
+        var shop = document.getElementById('editShopName').value.trim();
+        var name = document.getElementById('editOwnerName').value.trim();
         var phone = document.getElementById('editPhone').value.trim();
-
-        if(!name) { alert("Please enter your name!"); return; }
-
-        localStorage.setItem('faba_user_name', name);
-        localStorage.setItem('faba_user_email', email);
+        if(!shop || !name) { alert("Shop Name and Owner Name are required!"); return; }
+        
+        localStorage.setItem('faba_shop_name', shop);
+        localStorage.setItem('faba_owner_name', name);
         localStorage.setItem('faba_user_phone', phone);
-
-        loadUserProfile();
-        alert("✅ Profile updated successfully!");
+        syncUserProfile();
+        alert("✅ Shop & Profile updated successfully!");
     }
 
-    function switchTab(tabId, btnElement) {
-        var tabs = document.getElementsByClassName('tab-content');
-        for(var i=0; i<tabs.length; i++) {
-            tabs[i].classList.remove('active');
-        }
-        var navs = document.getElementsByClassName('nav-item');
-        for(var j=0; j<navs.length; j++) {
-            navs[j].classList.remove('active');
-        }
-        
+    function switchTab(tabId, btnElem) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
-        btnElement.classList.add('active');
+        if(btnElem) btnElem.classList.add('active');
     }
 
-    function checkScratchCardStatus() {
-        var trialClaimed = localStorage.getItem('faba_trial_scratch_used') === 'true';
-        var isPro = localStorage.getItem('faba_pro_status') === 'active';
-        var proClaimed = localStorage.getItem('faba_pro_scratch_used') === 'true';
-        var scratchBox = document.getElementById('scratchText');
+    /* SETTINGS MODAL */
+    function openSettingsModal() { document.getElementById('settingsModal').style.display = 'flex'; }
+    function closeSettingsModal() { document.getElementById('settingsModal').style.display = 'none'; }
 
-        if(isPro) {
-            if(proClaimed) {
-                scratchBox.innerText = "✅ Pro Scratch Card Already Claimed";
-            } else {
-                scratchBox.innerText = "🎰 Tap to Scratch Pro Coupon (5% OFF) 🎰";
-            }
-        } else {
-            if(trialClaimed) {
-                scratchBox.innerText = "✅ 7-Day Trial 5% Coupon Already Claimed";
-            } else {
-                scratchBox.innerText = "🎰 Tap to Scratch 7-Day Trial Coupon (5% OFF) 🎰";
-            }
+    function changeAppTheme() {
+        var theme = document.getElementById('themeSelector').value;
+        document.body.className = '';
+        if(theme === 'dark') document.body.classList.add('theme-dark');
+        if(theme === 'gold') document.body.classList.add('theme-gold');
+        localStorage.setItem('faba_app_theme', theme);
+    }
+
+    function loadSavedTheme() {
+        var savedTheme = localStorage.getItem('faba_app_theme') || 'light';
+        document.getElementById('themeSelector').value = savedTheme;
+        changeAppTheme();
+    }
+
+    function openCameraScanner() {
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.capture = 'environment';
+        input.onchange = function() { alert("📷 Barcode scanned successfully!"); };
+        input.click();
+    }
+
+    /* CUSTOMER CONTACTS & AUTO-SELECT BULK WHATSAPP */
+    function saveNewCustomerContact() {
+        var name = document.getElementById('crmNewName').value.trim();
+        var phone = document.getElementById('crmNewPhone').value.trim();
+        if(!name || !phone) { alert("Enter Customer Name and Phone Number!"); return; }
+
+        customerContacts.push({ name: name, phone: phone, selected: true });
+        localStorage.setItem('faba_contacts', JSON.stringify(customerContacts));
+        renderCustomerContacts();
+
+        document.getElementById('crmNewName').value = '';
+        document.getElementById('crmNewPhone').value = '';
+        alert("✅ Contact Saved Successfully!");
+    }
+
+    function loadSavedContacts() {
+        var saved = localStorage.getItem('faba_contacts');
+        if(saved) {
+            customerContacts = JSON.parse(saved);
+            renderCustomerContacts();
         }
     }
 
-    function scratchRewardCard() {
-        var isPro = localStorage.getItem('faba_pro_status') === 'active';
-        var trialClaimed = localStorage.getItem('faba_trial_scratch_used') === 'true';
-        var proClaimed = localStorage.getItem('faba_pro_scratch_used') === 'true';
-
-        if(!isPro && trialClaimed) {
-            alert("⚠️ You have already claimed your 7-day trial 5% discount!");
+    function renderCustomerContacts() {
+        var list = document.getElementById('customerContactsList');
+        if(customerContacts.length === 0) {
+            list.innerHTML = "<p style='font-size:11px; color:var(--text-muted);'>No saved contacts yet.</p>";
             return;
         }
-
-        if(isPro && proClaimed) {
-            alert("⚠️ You have already used your coupon for this subscription cycle!");
-            return;
+        list.innerHTML = "";
+        for(var i=0; i<customerContacts.length; i++) {
+            var c = customerContacts[i];
+            list.innerHTML += `<div style="display:flex; align-items:center; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--border-color);">
+                <label style="font-size:12px; color:var(--text-color); display:flex; align-items:center; gap:8px; cursor:pointer;">
+                    <input type="checkbox" ${c.selected ? 'checked' : ''} onclick="toggleContactSelection(${i})"> <strong>${c.name}</strong> (${c.phone})
+                </label>
+            </div>`;
         }
+    }
 
-        var couponCode = "LUCKY5"; 
-        
-        if(!isPro) {
-            localStorage.setItem('faba_trial_scratch_used', 'true');
+    function toggleContactSelection(index) {
+        customerContacts[index].selected = !customerContacts[index].selected;
+    }
+
+    function toggleSelectAllContacts(status) {
+        for(var i=0; i<customerContacts.length; i++) {
+            customerContacts[i].selected = status;
+        }
+        renderCustomerContacts();
+    }
+
+    function sendBulkWhatsAppMessages() {
+        var msg = document.getElementById('bulkMessageText').value.trim();
+        if(!msg) { alert("Please type a message to send!"); return; }
+
+        var selectedCount = 0;
+        for(var i=0; i<customerContacts.length; i++) {
+            if(customerContacts[i].selected) {
+                selectedCount++;
+                var phoneClean = customerContacts[i].phone.replace(/\D/g,'');
+                window.open("https://wa.me/" + phoneClean + "?text=" + encodeURIComponent(msg), '_blank');
+            }
+        }
+        if(selectedCount === 0) {
+            alert("Please select at least one customer contact!");
+        }
+    }
+
+    function generateAndSendInvoice() {
+        var shopName = localStorage.getItem('faba_shop_name') || "FABA Store";
+        var name = document.getElementById('custName').value.trim();
+        var phone = document.getElementById('custPhone').value.trim();
+        var amount = document.getElementById('custAmount').value.trim();
+        var payType = document.getElementById('custPayType').value;
+
+        if(!name || !amount) { alert("Please enter Customer Name and Amount!"); return; }
+
+        salesRecords.push({ name: name, phone: phone, amount: amount, type: payType });
+        renderSalesLedger();
+
+        if(phone) {
+            var billMsg = "🧾 *" + shopName + " INVOICE*\n-------------------------------\n👤 *Customer:* " + name + "\n💰 *Net Amount:* ₹" + amount + "\n💳 *Payment Mode:* " + payType.toUpperCase() + "\n-------------------------------\nThank you! Visit again. 🙏";
+            window.open("https://wa.me/" + phone.replace(/\D/g,'') + "?text=" + encodeURIComponent(billMsg), '_blank');
         } else {
-            localStorage.setItem('faba_pro_scratch_used', 'true');
-        }
-
-        document.getElementById('scratchText').innerText = "🎉 COUPON: " + couponCode + " (5% OFF)";
-        document.getElementById('couponInput').value = couponCode;
-        checkScratchCardStatus();
-        alert("🎉 Congratulations! You won a 5% discount coupon: " + couponCode);
-    }
-
-    function applyCoupon() {
-        var code = document.getElementById('couponInput').value.trim();
-        if(code === "LUCKY5") {
-            var newPrice = Math.round(599 * 0.95); 
-            document.getElementById('payPrice').innerText = "₹" + newPrice + " (5% OFF Applied)";
-            alert("✅ Coupon applied successfully!");
-        } else {
-            alert("Invalid or expired coupon code!");
-        }
-    }
-
-    function shareReferral() {
-        var text = "Download FABA Engine for Smart Business Tools! Use my code: FABA-REF-789 Link: https://faba-engine-v2.vercel.app";
-        if(navigator.share) {
-            navigator.share({ title: 'FABA Engine', text: text, url: 'https://faba-engine-v2.vercel.app' });
-        } else {
-            prompt("Copy Referral Link:", text);
-        }
-    }
-
-    function buySubscription() {
-        var confirmBuy = confirm("Proceed payment of ₹599 to UPI: " + ownerUpi + " ?");
-        if(confirmBuy) {
-            localStorage.setItem('faba_pro_status', 'active');
-            localStorage.setItem('faba_pro_scratch_used', 'false'); 
-            
-            var count = parseInt(localStorage.getItem('faba_sub_count') || "0") + 1;
-            localStorage.setItem('faba_sub_count', count);
-
-            checkScratchCardStatus();
-            alert("🎉 Subscription activated successfully! Pro scratch card unlocked.");
-        }
-    }
-
-    function verifyOwnerCredentials() {
-        var email = prompt("Enter Owner Gmail ID:");
-        var pin = prompt("Enter Owner Secret PIN:");
-
-        if(email && pin === "Farhan2012") {
-            localStorage.setItem('faba_owner_logged', 'true');
-            checkOwnerSession();
-            alert("Welcome Master!");
-        } else {
-            alert("Access Denied!");
-        }
-    }
-
-    function checkOwnerSession() {
-        if(localStorage.getItem('faba_owner_logged') === 'true') {
-            document.getElementById('ownerDashboard').style.display = 'block';
-            document.getElementById('btnOwnerLogin').style.display = 'none';
-        } else {
-            document.getElementById('ownerDashboard').style.display = 'none';
-            document.getElementById('btnOwnerLogin').style.display = 'block';
-        }
-    }
-
-    function ownerLogout() {
-        localStorage.removeItem('faba_owner_logged');
-        checkOwnerSession();
-    }
-
-    function editPnbDetails() {
-        var acc = prompt("Enter PNB Account Number:", pnbAcc);
-        var ifsc = prompt("Enter PNB IFSC Code:", pnbIfsc);
-        if(acc && ifsc) {
-            pnbAcc = acc; 
-            pnbIfsc = ifsc;
-            localStorage.setItem('faba_pnb_acc', pnbAcc);
-            localStorage.setItem('faba_pnb_ifsc', pnbIfsc);
-            loadUserProfile();
-            alert("PNB details updated successfully!");
-        }
-    }
-
-    function addTransaction() {
-        var name = document.getElementById('custName').value;
-        var amount = document.getElementById('amount').value;
-        var item = document.getElementById('itemName').value;
-        var type = document.getElementById('payType').value;
-
-        if(!name || !amount) { alert("Customer Name & Amount are required!"); return; }
-
-        transactions.push({ name: name, amount: amount, item: item, type: type, time: new Date().toLocaleTimeString() });
-        var container = document.getElementById('listContainer');
-        container.innerHTML = '';
-        for(var k=0; k<transactions.length; k++) {
-            var t = transactions[k];
-            container.innerHTML += '<div style="background:#1e293b; padding:10px; border-radius:8px; margin-bottom:6px; font-size:13px;">👤 ' + t.name + ' - ₹' + t.amount + ' (' + t.type + ')</div>';
+            alert("✅ Sales Entry Recorded Successfully!");
         }
 
         document.getElementById('custName').value = '';
-        document.getElementById('amount').value = '';
-        document.getElementById('itemName').value = '';
+        document.getElementById('custPhone').value = '';
+        document.getElementById('custAmount').value = '';
+    }
+
+    function renderSalesLedger() {
+        var container = document.getElementById('homeSalesLedger');
+        container.innerHTML = "";
+        for(var i=0; i<salesRecords.length; i++) {
+            var s = salesRecords[i];
+            container.innerHTML += "<div class='item-tile'><div class='item-info'><h5>👤 " + s.name + "</h5><p>Mode: " + s.type.toUpperCase() + "</p></div><div class='item-price'>₹" + s.amount + "</div></div>";
+        }
+    }
+
+    function calculateStoneRecord() {
+        var name = document.getElementById('stName').value.trim();
+        var weight = parseFloat(document.getElementById('stWeight').value) || 0;
+        var unit = document.getElementById('stUnit').value;
+        var rate = parseFloat(document.getElementById('stRate').value) || 0;
+
+        if(!name || weight <= 0 || rate <= 0) { alert("Please enter valid Stone Name, Weight, and Rate!"); return; }
+
+        var total = weight * rate;
+        stoneRecords.push({ name: name, weight: weight, unit: unit, rate: rate, total: total });
+        
+        var container = document.getElementById('stoneLedgerContainer');
+        container.innerHTML = "";
+        for(var i=0; i<stoneRecords.length; i++) {
+            var st = stoneRecords[i];
+            container.innerHTML += "<div class='item-tile'><div class='item-info'><h5>💎 " + st.name + "</h5><p>" + st.weight + " " + st.unit + " @ ₹" + st.rate + "/" + st.unit + "</p></div><div class='item-price'>₹" + st.total.toFixed(2) + "</div></div>";
+        }
+
+        document.getElementById('stName').value = '';
+        document.getElementById('stWeight').value = '';
+        document.getElementById('stRate').value = '';
+        alert("💎 Stone Record Calculated & Saved!");
+    }
+
+    function triggerToolPanel(toolKey) {
+        document.querySelectorAll('.tool-panel').forEach(p => p.style.display = 'none');
+        var target = document.getElementById('tPanel-' + toolKey);
+        if(target) target.style.display = 'block';
+    }
+
+    function filterToolsGrid() {
+        var q = document.getElementById('toolQueryInput').value.toLowerCase();
+        document.querySelectorAll('#toolsGrid .tool-card').forEach(c => {
+            c.style.display = c.innerText.toLowerCase().includes(q) ? 'block' : 'none';
+        });
+    }
+
+    function execGstCalc() {
+        var base = parseFloat(document.getElementById('gstBase').value) || 0;
+        var pct = parseFloat(document.getElementById('gstPct').value) || 18;
+        if(base <= 0) return;
+        var tax = (base * pct) / 100;
+        document.getElementById('resGst').innerText = "GST Tax (" + pct + "%): ₹" + tax.toFixed(2) + " | Total Payable: ₹" + (base + tax).toFixed(2);
+    }
+
+    function execDiscountCalc() {
+        var mrp = parseFloat(document.getElementById('discOriginal').value) || 0;
+        var pct = parseFloat(document.getElementById('discPercent').value) || 0;
+        if(mrp <= 0) return;
+        var save = (mrp * pct) / 100;
+        document.getElementById('resDisc').innerText = "You Save: ₹" + save.toFixed(2) + " | Final Price: ₹" + (mrp - save).toFixed(2);
+    }
+
+    function execCashCounter() {
+        var n500 = (parseInt(document.getElementById('cnt500').value) || 0) * 500;
+        var n200 = (parseInt(document.getElementById('cnt200').value) || 0) * 200;
+        var n100 = (parseInt(document.getElementById('cnt100').value) || 0) * 100;
+        document.getElementById('resCash').innerText = "Total Cash in Drawer: ₹" + (n500 + n200 + n100);
+    }
+
+    function execKhataSave() {
+        var name = document.getElementById('kName').value.trim();
+        var amt = document.getElementById('kAmt').value.trim();
+        if(!name || !amt) return;
+        document.getElementById('resKhata').innerText = "Saved Due for " + name + ": ₹" + amt;
+    }
+
+    function execUnitConvert() {
+        var kg = parseFloat(document.getElementById('uKg').value) || 0;
+        document.getElementById('resUnit').innerText = kg + " Kg = " + (kg * 1000) + " Grams";
+    }
+
+    function execProfitCalc() {
+        var cost = parseFloat(document.getElementById('pCostPrice').value) || 0;
+        var sell = parseFloat(document.getElementById('pSellPrice').value) || 0;
+        if(cost <= 0 || sell <= 0) return;
+        var profit = sell - cost;
+        var margin = ((profit / sell) * 100).toFixed(1);
+        document.getElementById('resProfit').innerText = "Net Profit: ₹" + profit + " (" + margin + "% Margin)";
+    }
+
+    function execTagGen() {
+        var prod = document.getElementById('tagProduct').value.trim();
+        var pr = document.getElementById('tagPrice').value.trim();
+        if(!prod || !pr) return;
+        document.getElementById('resTag').innerText = "TAG: " + prod.toUpperCase() + " | MRP: ₹" + pr;
+    }
+
+    function execQrGen() {
+        var upi = document.getElementById('qrUpiInput').value.trim();
+        var amt = document.getElementById('qrAmountInput').value.trim();
+        if(!upi) { alert("Enter UPI ID!"); return; }
+        var link = "upi://pay?pa=" + encodeURIComponent(upi) + "&pn=FABA&am=" + amt + "&cu=INR";
+        var qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=" + encodeURIComponent(link);
+        document.getElementById('resQr').innerHTML = "<img src='" + qrUrl + "' style='border-radius:10px; border:1px solid #cbd5e1;'><br><a href='" + link + "' class='btn-main' style='display:inline-block; text-decoration:none; margin-top:6px;'>Pay via UPI App</a>";
+    }
+
+    function scratchTheCard() {
+        var discounts = [5, 10, 15, 20];
+        scratchDiscountPercent = discounts[Math.floor(Math.random() * discounts.length)];
+        document.getElementById('scratchCardArea').style.background = "#10b981";
+        document.getElementById('scratchCardArea').style.color = "#ffffff";
+        document.getElementById('scratchCardArea').innerText = "🎉 SCRATCHED SUCCESSFULLY!";
+        document.getElementById('scratchResult').innerText = "Awesome! You won " + scratchDiscountPercent + "% OFF coupon on your subscription plan!";
+    }
+
+    function triggerSubscriptionCheckout(price, planTitle) {
+        var finalPrice = price;
+        if(scratchDiscountPercent > 0) {
+            finalPrice = price - Math.round((price * scratchDiscountPercent) / 100);
+            planTitle += " (" + scratchDiscountPercent + "% OFF applied)";
+        }
+
+        document.getElementById('checkoutPlanTitle').innerText = planTitle + " - ₹" + finalPrice;
+
+        var upiLink = "upi://pay?pa=" + encodeURIComponent(masterOwnerUpi) + "&pn=FABA_Store&am=" + finalPrice + "&cu=INR";
+        document.getElementById('checkoutDirectUpiBtn').href = upiLink;
+        document.getElementById('checkoutQrImg').src = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=" + encodeURIComponent(upiLink);
+        document.getElementById('payModal').style.display = 'flex';
+    }
+
+    function closePaymentModal() { document.getElementById('payModal').style.display = 'none'; }
+
+    function shareReferralLink() {
+        var link = "Join FABA Engine Pro! Use my referral code FABA-REF-7892: https://faba-engine-v5.vercel.app";
+        if(navigator.share) {
+            navigator.share({ title: 'FABA Engine', text: link, url: 'https://faba-engine-v5.vercel.app' });
+        } else {
+            prompt("Copy & Share Referral Link:", link);
+        }
+    }
+
+    /* MASTER OWNER ROOM AUTHENTICATION */
+    function openOwnerRoomModal() {
+        document.getElementById('ownerAuthModal').style.display = 'flex';
+        checkMasterSessionState();
+    }
+
+    function closeOwnerModal() { document.getElementById('ownerAuthModal').style.display = 'none'; }
+
+    function authenticateMasterOwner() {
+        var email = document.getElementById('ownerEmailInput').value.trim();
+        var pin = document.getElementById('ownerPinInput').value.trim();
+
+        if(email === "faba.engine.business@gmail.com" && pin === "Farhan2012") {
+            localStorage.setItem('faba_master_active', 'true');
+            checkMasterSessionState();
+            alert("Welcome Master Farhan!");
+        } else {
+            alert("Access Denied: Invalid Master Credentials!");
+        }
+    }
+
+    function checkMasterSessionState() {
+        var active = localStorage.getItem('faba_master_active') === 'true';
+        var ownerName = localStorage.getItem('faba_owner_name') || "Farhan";
+        if(active) {
+            document.getElementById('ownerLoginForm').style.display = 'none';
+            document.getElementById('ownerDashboardPanel').style.display = 'block';
+            document.getElementById('ownerNameDisplay').innerText = ownerName;
+            document.getElementById('ownerCurrentUpiDisplay').innerText = masterOwnerUpi;
+        } else {
+            document.getElementById('ownerLoginForm').style.display = 'block';
+            document.getElementById('ownerDashboardPanel').style.display = 'none';
+        }
+    }
+
+    function configureOwnerUpiDetails() {
+        var upi = prompt("Enter Master Receiving Business UPI ID:", masterOwnerUpi);
+        if(upi) {
+            masterOwnerUpi = upi;
+            localStorage.setItem('faba_master_upi', masterOwnerUpi);
+            document.getElementById('ownerCurrentUpiDisplay').innerText = masterOwnerUpi;
+            alert("✅ Business Payment UPI updated successfully!");
+        }
+    }
+
+    function logoutMasterOwner() {
+        localStorage.removeItem('faba_master_active');
+        checkMasterSessionState();
     }
 </script>
 </body>
