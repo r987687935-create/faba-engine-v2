@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en" id="htmlRoot">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FABA Engine Enterprise V5 - Ultimate Master Pro</title>
+    <title>FABA Engine Enterprise V11 - Ultimate English Master Pro</title>
     <style>
         :root {
             --bg-color: #f8fafc;
@@ -45,7 +45,7 @@
         body { background-color: var(--bg-color); color: var(--text-color); padding-bottom: 95px; transition: background-color 0.3s, color 0.3s; }
         .app-container { max-width: 480px; margin: 0 auto; background: var(--surface-color); min-height: 100vh; position: relative; border-left: 1px solid var(--border-color); border-right: 1px solid var(--border-color); box-shadow: var(--card-shadow); }
         
-        /* TOP HEADER WITH TOP-LEFT PROFILE & SETTINGS */
+        /* TOP HEADER */
         .top-bar { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: white; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1100; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
         .top-left-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .avatar-circle { width: 40px; height: 40px; background: #ffffff; color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 17px; border: 2px solid rgba(255,255,255,0.8); }
@@ -70,6 +70,7 @@
         
         .btn-main { width: 100%; padding: 13px; background: var(--primary-color); color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 800; cursor: pointer; margin-top: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: 0.2s; }
         .btn-main:active { transform: scale(0.98); background: var(--primary-dark); }
+        .btn-secondary { background: var(--text-muted); margin-top: 6px; }
 
         /* ITEM TILES & LEDGERS */
         .item-tile { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 8px; }
@@ -93,6 +94,18 @@
         .prem-card.featured { border-color: var(--primary-color); background: var(--bg-color); }
         .prem-badge { position: absolute; right: 12px; top: 12px; background: var(--primary-color); color: white; font-size: 9px; font-weight: bold; padding: 3px 9px; border-radius: 10px; }
         .prem-price { font-size: 20px; font-weight: 900; color: var(--primary-color); margin: 6px 0; }
+        .feature-list { font-size: 11px; color: var(--text-muted); margin: 6px 0; padding-left: 14px; }
+        .feature-list li { margin-bottom: 3px; }
+
+        /* TIMER BOX */
+        .timer-box { background: var(--bg-color); border: 1px dashed var(--primary-color); border-radius: 10px; padding: 10px; margin-top: 10px; text-align: center; }
+        .timer-box h4 { font-size: 12px; color: var(--primary-color); margin-bottom: 2px; }
+        .timer-countdown { font-size: 15px; font-weight: 900; color: var(--text-color); }
+
+        /* SCRATCH SUB-TABS */
+        .scratch-sub-nav { display: flex; gap: 8px; margin-bottom: 10px; }
+        .scratch-sub-btn { flex: 1; padding: 8px; background: var(--border-color); border: none; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; color: var(--text-color); }
+        .scratch-sub-btn.active { background: var(--primary-color); color: white; }
 
         /* BOTTOM NAVIGATION */
         .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: var(--surface-color); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; box-shadow: 0 -4px 20px rgba(0,0,0,0.06); }
@@ -130,7 +143,7 @@
         <div class="card">
             <div class="card-title">
                 <span>📝 Instant WhatsApp Billing</span>
-                <button style="padding:4px 8px; background:var(--primary-color); color:white; border:none; border-radius:6px; font-size:10px; cursor:pointer;" onclick="openCameraScanner()">📷 Scan Barcode</button>
+                <button style="padding:4px 8px; background:var(--primary-color); color:white; border:none; border-radius:6px; font-size:10px; cursor:pointer;" onclick="openCameraScanner()">📷 Scan</button>
             </div>
             <div class="input-group">
                 <label>Customer Name</label>
@@ -147,9 +160,9 @@
             <div class="input-group">
                 <label>Payment Mode</label>
                 <select id="custPayType">
-                    <option value="cash">Cash (নগদ)</option>
-                    <option value="online">UPI Online (অনলাইন)</option>
-                    <option value="udhar">Udhar / Credit (বাকি)</option>
+                    <option value="cash">Cash</option>
+                    <option value="online">UPI Online</option>
+                    <option value="udhar">Udhar / Credit</option>
                 </select>
             </div>
             <button class="btn-main" onclick="generateAndSendInvoice()">Send Invoice on WhatsApp 📲</button>
@@ -171,16 +184,16 @@
             </div>
             <div class="input-group">
                 <label>WhatsApp Number</label>
-                <input type="tel" id="crmNewPhone" placeholder="Enter Phone (with country code)">
+                <input type="tel" id="crmNewPhone" placeholder="Enter Phone">
             </div>
             <button class="btn-main" style="background:var(--success-color);" onclick="saveNewCustomerContact()">+ Save Contact 👥</button>
         </div>
 
         <div class="card">
-            <div class="card-title">📢 Bulk WhatsApp Broadcast (Auto-Select)</div>
+            <div class="card-title">📢 Bulk WhatsApp Broadcast</div>
             <div class="input-group">
                 <label>Broadcast Message Text</label>
-                <textarea id="bulkMessageText" rows="3" placeholder="Write promotional message or reminder here..."></textarea>
+                <textarea id="bulkMessageText" rows="3" placeholder="Write promotional message..."></textarea>
             </div>
             <div style="display:flex; gap:6px; margin-bottom:8px;">
                 <button style="flex:1; padding:8px; background:var(--primary-color); color:white; border:none; border-radius:8px; font-size:11px; font-weight:bold; cursor:pointer;" onclick="toggleSelectAllContacts(true)">Select All ✅</button>
@@ -199,7 +212,7 @@
             <div class="card-title">💎 Gemstone & Marble Calculator</div>
             <div class="input-group">
                 <label>Stone / Item Name</label>
-                <input type="text" id="stName" placeholder="e.g. Blue Sapphire, Granite Slab">
+                <input type="text" id="stName" placeholder="e.g. Blue Sapphire, Granite">
             </div>
             <div style="display:flex; gap:8px;">
                 <div class="input-group" style="flex:1;">
@@ -209,10 +222,10 @@
                 <div class="input-group" style="flex:1;">
                     <label>Unit</label>
                     <select id="stUnit">
-                        <option value="Carat">Carat (ক্যারেট)</option>
-                        <option value="Ratti">Ratti (রত্তি)</option>
-                        <option value="Gram">Gram (গ্রাম)</option>
-                        <option value="SqFt">Sq. Ft (স্কয়ার ফিট)</option>
+                        <option value="Carat">Carat</option>
+                        <option value="Ratti">Ratti</option>
+                        <option value="Gram">Gram</option>
+                        <option value="SqFt">Sq. Ft</option>
                     </select>
                 </div>
             </div>
@@ -235,13 +248,19 @@
             <div class="avatar-circle" style="width:70px; height:70px; font-size:32px; margin:0 auto 12px auto; background:var(--primary-color); color:white;" id="profAvatarBig">F</div>
             <h2 id="profDisplayShop" style="font-size:18px;">FABA Store</h2>
             <p id="profDisplayName" style="font-size:13px; color:var(--primary-color); font-weight:bold; margin-top:2px;">Farhan</p>
-            <p id="profDisplayEmail" style="font-size:11px; color:var(--text-muted); margin-top:2px;">faba.engine@gmail.com</p>
+            <p id="profDisplayEmail" style="font-size:11px; color:var(--text-muted); margin-top:2px;">faba.engine.business@gmail.com</p>
+            
+            <!-- LIVE TIMER COUNTDOWN -->
+            <div class="timer-box">
+                <h4>⏳ Trial / Subscription Time Left:</h4>
+                <div class="timer-countdown" id="liveCountdownTimer">06 Days 23h 59m 59s</div>
+            </div>
         </div>
 
         <div class="card">
             <div class="card-title">⚙️ Shop & Profile Setup</div>
             <div class="input-group">
-                <label>Your Shop / Business Name</label>
+                <label>Shop / Business Name</label>
                 <input type="text" id="editShopName" placeholder="e.g. Farhan Enterprise">
             </div>
             <div class="input-group">
@@ -260,19 +279,20 @@
         </div>
 
         <div class="card" style="text-align:center;">
-            <div class="card-title">🎁 Your Unique Referral Link</div>
-            <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Share with friends and earn cash rewards!</p>
+            <div class="card-title">🎁 Referral Rewards Milestone</div>
+            <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Refer friends! You get 20% OFF & they get 10% OFF.<br>12 Refers = 1 Month Free | 365 Refers = 1 Year Free!</p>
             <div style="background:var(--bg-color); padding:10px; border-radius:8px; font-weight:bold; color:var(--primary-color); border:1px dashed var(--primary-color); margin-bottom:8px;" id="userRefCodeDisplay">FABA-REF-7892</div>
-            <button class="btn-main" onclick="shareReferralLink()">Share on WhatsApp 📲</button>
+            <p style="font-size:11px; color:var(--success-color); font-weight:bold; margin-bottom:8px;" id="referralCountText">Total Valid Refers: 0</p>
+            <button class="btn-main" onclick="shareReferralLink()">Share Referral on WhatsApp 📲</button>
         </div>
     </div>
 
-    <!-- TAB 5: 30+ TOOLS SUITE -->
+    <!-- TAB 5: TOOLS SUITE -->
     <div id="tab-tools" class="tab-content">
         <div class="card">
             <div class="tools-search">
-                <div class="card-title">🛠️ 30+ Enterprise Working Tools</div>
-                <input type="text" id="toolQueryInput" placeholder="🔍 Search among tools..." onkeyup="filterToolsGrid()">
+                <div class="card-title">🛠️ Working Business Tools Suite</div>
+                <input type="text" id="toolQueryInput" placeholder="🔍 Search tools..." onkeyup="filterToolsGrid()">
             </div>
             
             <div class="tools-grid" id="toolsGrid">
@@ -345,7 +365,7 @@
 
             <div class="tool-panel" id="tPanel-qr">
                 <h4 style="color:var(--primary-color); margin-bottom:8px;">💳 Quick UPI QR Generator</h4>
-                <input type="text" id="qrUpiInput" placeholder="Enter UPI ID (e.g. name@upi)" style="margin-bottom:4px;">
+                <input type="text" id="qrUpiInput" placeholder="Enter UPI ID" style="margin-bottom:4px;">
                 <input type="number" id="qrAmountInput" placeholder="Amount (₹)" style="margin-bottom:4px;">
                 <button class="btn-main" onclick="execQrGen()">Generate UPI QR 💳</button>
                 <div id="resQr" style="margin-top:8px; text-align:center;"></div>
@@ -353,15 +373,33 @@
         </div>
     </div>
 
-    <!-- TAB 6: PREMIUM PLANS & SCRATCH CARD -->
+    <!-- TAB 6: PREMIUM PLANS & RENEWAL SCRATCH CARD WITH HISTORY -->
     <div id="tab-rewards" class="tab-content">
-        <div class="card" style="text-align:center;">
-            <div class="card-title">🎁 Scratch Card & Discount Coupon</div>
-            <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Scratch below to win 5% to 20% instant discount on plans!</p>
-            <div id="scratchCardArea" onclick="scratchTheCard()" style="background:linear-gradient(135deg, #cbd5e1, #94a3b8); padding:20px; border-radius:12px; font-weight:bold; color:#0f172a; cursor:pointer; margin-bottom:8px;">
-                🎮 TAP TO SCRATCH & WIN DISCOUNT!
+        <div class="card" id="scratchCardSection" style="text-align:center; display:none;">
+            <div class="card-title">🎁 Renewal Mega Scratch Card</div>
+            
+            <!-- SCRATCH & HISTORY SUB-TABS -->
+            <div class="scratch-sub-nav">
+                <button class="scratch-sub-btn active" id="subBtnScratch" onclick="switchScratchSubTab('scratch')">Scratch Card</button>
+                <button class="scratch-sub-btn" id="subBtnHistory" onclick="switchScratchSubTab('history')">Coupon History</button>
             </div>
-            <div id="scratchResult" style="font-size:12px; font-weight:bold; color:var(--success-color);"></div>
+
+            <!-- SCRATCH VIEW -->
+            <div id="scratchViewPanel">
+                <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Scratch the card to reveal your renewal coupon (One-Time Use)!</p>
+                <div id="scratchCardArea" onclick="scratchTheCard()" style="background:linear-gradient(135deg, #cbd5e1, #94a3b8); padding:20px; border-radius:12px; font-weight:bold; color:#0f172a; cursor:pointer; margin-bottom:8px;">
+                    🎮 TAP TO SCRATCH COUPON!
+                </div>
+                <div id="scratchResult" style="font-size:12px; font-weight:bold; color:var(--success-color);"></div>
+            </div>
+
+            <!-- HISTORY VIEW -->
+            <div id="historyViewPanel" style="display:none; text-align:left;">
+                <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Your Redeemed Coupon History:</p>
+                <div id="couponHistoryList" style="max-height:150px; overflow-y:auto; border:1px solid var(--border-color); border-radius:8px; padding:8px; font-size:11px;">
+                    <span style="color:var(--text-muted);">No used coupons yet.</span>
+                </div>
+            </div>
         </div>
 
         <div class="card">
@@ -371,7 +409,11 @@
                 <div class="prem-badge">STANDARD</div>
                 <h4>Standard Edition</h4>
                 <div class="prem-price">₹499 <span style="font-size:11px; color:var(--text-muted);">/ Month</span></div>
-                <p style="font-size:11px; color:var(--text-muted);">Core WhatsApp Billing + 100 Contacts CRM</p>
+                <ul class="feature-list">
+                    <li>✓ Core WhatsApp Billing & Invoices</li>
+                    <li>✓ 100 Customer Contacts CRM</li>
+                    <li>✓ Automatic 5% Discount on 1st Trial Expiry</li>
+                </ul>
                 <button class="btn-main" style="margin-top:8px;" onclick="triggerSubscriptionCheckout(499, 'Standard Edition')">Select Standard ₹499 💳</button>
             </div>
 
@@ -379,7 +421,12 @@
                 <div class="prem-badge">POPULAR</div>
                 <h4>Premium+ Suite</h4>
                 <div class="prem-price">₹899 <span style="font-size:11px; color:var(--text-muted);">/ Month</span></div>
-                <p style="font-size:11px; color:var(--text-muted);">Unlimited Bulk WhatsApp + All 30+ Tools + Stone Calculator</p>
+                <ul class="feature-list">
+                    <li>✓ Unlimited Bulk WhatsApp Broadcast</li>
+                    <li>✓ All 8+ Working Business Tools Suite</li>
+                    <li>✓ Gemstone & Marble Calculator Engine</li>
+                    <li>✓ Automatic 5% Discount on 1st Trial Expiry</li>
+                </ul>
                 <button class="btn-main" style="margin-top:8px;" onclick="triggerSubscriptionCheckout(899, 'Premium+ Suite')">Select Premium+ ₹899 💳</button>
             </div>
 
@@ -387,7 +434,11 @@
                 <div class="prem-badge">YEARLY</div>
                 <h4>Legendary Enterprise</h4>
                 <div class="prem-price">₹4,999 <span style="font-size:11px; color:var(--text-muted);">/ Year</span></div>
-                <p style="font-size:11px; color:var(--text-muted);">Full Year Unlocked + Priority Support + Multi-Staff Access</p>
+                <ul class="feature-list">
+                    <li>✓ Full Year Unlocked VIP Access</li>
+                    <li>✓ Priority Owner Support & Multi-Staff Support</li>
+                    <li>✓ Automatic 5% Discount on 1st Trial Expiry</li>
+                </ul>
                 <button class="btn-main" style="margin-top:8px;" onclick="triggerSubscriptionCheckout(4999, 'Legendary Enterprise')">Select Legendary ₹4,999 💳</button>
             </div>
         </div>
@@ -400,49 +451,42 @@
         <button class="nav-item" onclick="switchTab('tab-stone', this)"><span class="nav-icon">💎</span><span>Stone</span></button>
         <button class="nav-item" id="navProf" onclick="switchTab('tab-profile', this)"><span class="nav-icon">⚙️</span><span>Profile</span></button>
         <button class="nav-item" onclick="switchTab('tab-tools', this)"><span class="nav-icon">🛠️</span><span>Tools</span></button>
-        <button class="nav-item" onclick="switchTab('tab-rewards', this)"><span class="nav-icon">👑</span><span>Premium</span></button>
+        <button class="nav-item" onclick="switchTab('tab-rewards', this)"><span class="nav-icon">👑</span><span>Plans</span></button>
     </div>
 </div>
 
 <!-- SETTINGS MODAL -->
 <div class="modal" id="settingsModal">
     <div class="modal-body" style="text-align:left;">
-        <h3 style="color:var(--primary-color); margin-bottom:10px;">⚙️ App Settings & Customization</h3>
+        <h3 style="color:var(--primary-color); margin-bottom:10px;">⚙️ App Settings</h3>
         <div class="input-group">
-            <label>Select Interface Theme</label>
+            <label>Interface Theme</label>
             <select id="themeSelector" onchange="changeAppTheme()">
-                <option value="light">Classic Light (ডিফল্ট)</option>
-                <option value="dark">Pro Dark Mode (ডার্ক থিম)</option>
-                <option value="gold">Royal Gold Theme (গোল্ড থিম)</option>
+                <option value="light">Classic Light</option>
+                <option value="dark">Pro Dark Mode</option>
+                <option value="gold">Royal Gold Theme</option>
             </select>
         </div>
-        <div class="input-group">
-            <label>App Language</label>
-            <select id="appLangSelector">
-                <option value="bn">বাংলা (Bengali)</option>
-                <option value="en">English</option>
-                <option value="hi">हिन्दी (Hindi)</option>
-            </select>
-        </div>
-        <button class="btn-main" onclick="closeSettingsModal()">Save & Apply Settings 💾</button>
-        <button style="background:none; border:none; color:var(--text-muted); font-size:11px; margin-top:10px; cursor:pointer; width:100%; text-align:center;" onclick="closeSettingsModal()">Close</button>
+        <button class="btn-main" onclick="closeSettingsModal()">Save Settings 💾</button>
+        <button class="btn-main btn-secondary" onclick="closeSettingsModal()">Close ❌</button>
     </div>
 </div>
 
-<!-- PAYMENT GATEWAY MODAL -->
+<!-- PAYMENT GATEWAY MODAL WITH AUTOMATIC DISCOUNT & QR DETAILS -->
 <div class="modal" id="payModal">
     <div class="modal-body">
         <h3 style="color:var(--primary-color); margin-bottom:4px;">💳 Secure UPI Checkout</h3>
         <p id="checkoutPlanTitle" style="font-size:12px; font-weight:bold; color:var(--text);"></p>
+        <p id="checkoutDiscountNote" style="font-size:11px; color:var(--success-color); font-weight:bold; margin-top:2px;"></p>
         
         <div class="qr-card">
             <img id="checkoutQrImg" src="" alt="Payment QR">
         </div>
 
-        <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Scan QR with GPay, PhonePay, Paytm or any UPI App</p>
+        <p id="checkoutAmountDisplay" style="font-size:13px; font-weight:900; color:var(--primary-color); margin-bottom:8px;"></p>
         
         <a id="checkoutDirectUpiBtn" href="#" class="btn-main" style="display:block; text-decoration:none; margin-top:8px;">Open UPI App to Pay 📲</a>
-        <button style="background:none; border:none; color:var(--primary-color); font-size:11px; margin-top:10px; cursor:pointer;" onclick="closePaymentModal()">Cancel Transaction</button>
+        <button class="btn-main btn-secondary" onclick="closePaymentModal()">Cancel Transaction ❌</button>
     </div>
 </div>
 
@@ -456,16 +500,17 @@
             <input type="email" id="ownerEmailInput" placeholder="Master Owner Gmail ID" style="margin-bottom:6px;">
             <input type="password" id="ownerPinInput" placeholder="Master Secret PIN" style="margin-bottom:8px;">
             <button class="btn-main" onclick="authenticateMasterOwner()">Authenticate Access 👑</button>
-            <button style="background:none; border:none; color:var(--text-muted); font-size:11px; margin-top:10px; cursor:pointer;" onclick="closeOwnerModal()">Close Window</button>
+            <button class="btn-main btn-secondary" onclick="closeOwnerModal()">Close Window ❌</button>
         </div>
 
         <div id="ownerDashboardPanel" style="display:none; text-align:left;">
             <h4 style="color:var(--success-color); margin-bottom:8px;">👑 Master Control Active</h4>
-            <p style="font-size:11px;">Owner: <strong id="ownerNameDisplay">Farhan</strong></p>
+            <p style="font-size:11px;">Owner: <strong id="ownerNameDisplay">Farhan</strong> (Unlimited Lifetime)</p>
             <p style="font-size:11px;">Payment UPI: <strong id="ownerCurrentUpiDisplay">Not Set</strong></p>
             <br>
             <button class="btn-main" style="background:var(--success-color);" onclick="configureOwnerUpiDetails()">⚙️ Update Receiving UPI ID</button>
             <button class="btn-main btn-secondary" onclick="logoutMasterOwner()">Logout Master Session 🚪</button>
+            <button class="btn-main" style="background:var(--border-color); color:var(--text-color);" onclick="closeOwnerModal()">Close Window ❌</button>
         </div>
     </div>
 </div>
@@ -477,29 +522,75 @@
     var customerContacts = [];
     var masterOwnerUpi = localStorage.getItem('faba_master_upi') || "farhan@upi";
     var scratchDiscountPercent = 0;
+    var isCardScratched = localStorage.getItem('faba_card_scratched') === 'true';
+    var validReferralCount = parseInt(localStorage.getItem('faba_valid_ref_count') || "0");
+    var couponHistory = JSON.parse(localStorage.getItem('faba_coupon_history') || "[]");
 
     window.onload = function() {
-        verifyDeviceBinding();
+        checkFirstTimeOnboarding();
         syncUserProfile();
         loadSavedContacts();
         loadSavedTheme();
+        checkRenewalCouponEligibility();
+        updateReferralDisplay();
+        startLiveCountdownTimer();
+        renderCouponHistory();
     };
 
-    function verifyDeviceBinding() {
-        var bound = localStorage.getItem('faba_device_bound');
-        if(!bound) {
-            var email = prompt("🔒 Security Binding: Enter your primary Gmail ID to bind this device:");
-            if(email) {
-                localStorage.setItem('faba_device_bound', email);
-                localStorage.setItem('faba_user_email', email);
+    function checkFirstTimeOnboarding() {
+        var isRegistered = localStorage.getItem('faba_registered');
+        if(!isRegistered) {
+            var shop = prompt("👋 Welcome to FABA Engine! Enter your Shop/Business Name:");
+            var owner = prompt("Enter Owner Name:");
+            var email = prompt("Enter your Gmail ID:");
+            var phone = prompt("Enter your Phone Number:");
+            
+            if(shop && owner) {
+                localStorage.setItem('faba_shop_name', shop);
+                localStorage.setItem('faba_owner_name', owner);
+                localStorage.setItem('faba_user_email', email || "faba.engine.business@gmail.com");
+                localStorage.setItem('faba_user_phone', phone || "+919876543210");
+                localStorage.setItem('faba_registered', 'true');
+                localStorage.setItem('faba_trial_end', new Date().getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 Days Trial
+                alert("🎉 Account created successfully! Your 7-day trial has started.");
             }
         }
+    }
+
+    function startLiveCountdownTimer() {
+        var trialEnd = localStorage.getItem('faba_trial_end');
+        if(!trialEnd) {
+            trialEnd = new Date().getTime() + (7 * 24 * 60 * 60 * 1000);
+            localStorage.setItem('faba_trial_end', trialEnd);
+        }
+
+        setInterval(function() {
+            if(localStorage.getItem('faba_master_active') === 'true') {
+                document.getElementById('liveCountdownTimer').innerText = "Unlimited (Owner VIP Active)";
+                return;
+            }
+
+            var now = new Date().getTime();
+            var distance = trialEnd - now;
+
+            if (distance < 0) {
+                document.getElementById('liveCountdownTimer').innerText = "Trial Expired (Renewal Required)";
+                return;
+            }
+
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('liveCountdownTimer').innerText = days + " Days " + hours + "h " + minutes + "m " + seconds + "s";
+        }, 1000);
     }
 
     function syncUserProfile() {
         var shop = localStorage.getItem('faba_shop_name') || "FABA Store";
         var name = localStorage.getItem('faba_owner_name') || "Farhan";
-        var email = localStorage.getItem('faba_user_email') || "faba.engine@gmail.com";
+        var email = localStorage.getItem('faba_user_email') || "faba.engine.business@gmail.com";
         var phone = localStorage.getItem('faba_user_phone') || "+91 9876543210";
 
         document.getElementById('headerShopName').innerText = shop;
@@ -761,36 +852,131 @@
         document.getElementById('resQr').innerHTML = "<img src='" + qrUrl + "' style='border-radius:10px; border:1px solid #cbd5e1;'><br><a href='" + link + "' class='btn-main' style='display:inline-block; text-decoration:none; margin-top:6px;'>Pay via UPI App</a>";
     }
 
+    /* SCRATCH SUB-TABS (Scratch Card & History) */
+    function switchScratchSubTab(subTab) {
+        if(subTab === 'scratch') {
+            document.getElementById('subBtnScratch').classList.add('active');
+            document.getElementById('subBtnHistory').classList.remove('active');
+            document.getElementById('scratchViewPanel').style.display = 'block';
+            document.getElementById('historyViewPanel').style.display = 'none';
+        } else {
+            document.getElementById('subBtnHistory').classList.add('active');
+            document.getElementById('subBtnScratch').classList.remove('active');
+            document.getElementById('scratchViewPanel').style.display = 'none';
+            document.getElementById('historyViewPanel').style.display = 'block';
+        }
+    }
+
+    function checkRenewalCouponEligibility() {
+        var isRenewal = localStorage.getItem('faba_renewal_pending') === 'true';
+        if(isRenewal) {
+            document.getElementById('scratchCardSection').style.display = 'block';
+            if(isCardScratched) {
+                var savedPct = localStorage.getItem('faba_saved_scratch_pct') || '5';
+                lockScratchCardUI(savedPct);
+            }
+        }
+    }
+
     function scratchTheCard() {
-        var discounts = [5, 10, 15, 20];
-        scratchDiscountPercent = discounts[Math.floor(Math.random() * discounts.length)];
-        document.getElementById('scratchCardArea').style.background = "#10b981";
-        document.getElementById('scratchCardArea').style.color = "#ffffff";
-        document.getElementById('scratchCardArea').innerText = "🎉 SCRATCHED SUCCESSFULLY!";
-        document.getElementById('scratchResult').innerText = "Awesome! You won " + scratchDiscountPercent + "% OFF coupon on your subscription plan!";
+        if(isCardScratched) {
+            alert("This renewal coupon has already been used once!");
+            return;
+        }
+
+        var randRoll = Math.random() * 100; // 0 to 100%
+        if(randRoll < 90) {
+            scratchDiscountPercent = Math.random() < 0.5 ? 5 : 10;
+        } else {
+            var higherDiscounts = [15, 20, 25, 30, 50];
+            scratchDiscountPercent = higherDiscounts[Math.floor(Math.random() * higherDiscounts.length)];
+        }
+
+        isCardScratched = true;
+        localStorage.setItem('faba_card_scratched', 'true');
+        localStorage.setItem('faba_saved_scratch_pct', scratchDiscountPercent);
+        
+        // Save to History
+        couponHistory.push({ percent: scratchDiscountPercent, date: new Date().toLocaleDateString() });
+        localStorage.setItem('faba_coupon_history', JSON.stringify(couponHistory));
+        renderCouponHistory();
+
+        lockScratchCardUI(scratchDiscountPercent);
+        alert("🎉 Congratulations! You won " + scratchDiscountPercent + "% Discount Coupon!");
+    }
+
+    function lockScratchCardUI(pct) {
+        scratchDiscountPercent = parseInt(pct);
+        var scratchArea = document.getElementById('scratchCardArea');
+        scratchArea.style.background = "#10b981";
+        scratchArea.style.color = "#ffffff";
+        scratchArea.style.cursor = "default";
+        scratchArea.innerText = "🔒 SCRATCHED: " + scratchDiscountPercent + "% OFF (Redeemed)";
+        document.getElementById('scratchResult').innerHTML = "Your renewal coupon is active: <strong>" + scratchDiscountPercent + "% discount</strong> will apply on checkout!";
+    }
+
+    function renderCouponHistory() {
+        var list = document.getElementById('couponHistoryList');
+        if(couponHistory.length === 0) {
+            list.innerHTML = "<span style='color:var(--text-muted);'>No used coupons yet.</span>";
+            return;
+        }
+        list.innerHTML = "";
+        for(var i=0; i<couponHistory.length; i++) {
+            var h = couponHistory[i];
+            list.innerHTML += `<div style="padding:4px 0; border-bottom:1px solid var(--border-color);">🎉 <strong>${h.percent}% OFF</strong> Coupon Redeemed on ${h.date}</div>`;
+        }
     }
 
     function triggerSubscriptionCheckout(price, planTitle) {
         var finalPrice = price;
-        if(scratchDiscountPercent > 0) {
-            finalPrice = price - Math.round((price * scratchDiscountPercent) / 100);
-            planTitle += " (" + scratchDiscountPercent + "% OFF applied)";
+        var appliedDiscount = 0;
+        var isFirstSubscription = !localStorage.getItem('faba_first_sub_done');
+        var discountText = "";
+
+        if(isFirstSubscription) {
+            appliedDiscount = 5; // First time subscription auto 5% discount
+            discountText = "🎁 1st Time Trial Expiry Auto 5% OFF Applied!";
+        } else if(scratchDiscountPercent > 0) {
+            appliedDiscount = scratchDiscountPercent; // Renewal scratch card discount
+            discountText = "🎁 Renewal Scratch Coupon " + scratchDiscountPercent + "% OFF Applied!";
         }
 
-        document.getElementById('checkoutPlanTitle').innerText = planTitle + " - ₹" + finalPrice;
+        finalPrice = price - Math.round((price * appliedDiscount) / 100);
+
+        document.getElementById('checkoutPlanTitle').innerText = planTitle + " (Original: ₹" + price + ")";
+        document.getElementById('checkoutDiscountNote').innerText = discountText;
+        document.getElementById('checkoutAmountDisplay').innerText = "Total Payable Amount: ₹" + finalPrice;
 
         var upiLink = "upi://pay?pa=" + encodeURIComponent(masterOwnerUpi) + "&pn=FABA_Store&am=" + finalPrice + "&cu=INR";
         document.getElementById('checkoutDirectUpiBtn').href = upiLink;
         document.getElementById('checkoutQrImg').src = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=" + encodeURIComponent(upiLink);
         document.getElementById('payModal').style.display = 'flex';
+        
+        localStorage.setItem('faba_first_sub_done', 'true');
+        localStorage.setItem('faba_renewal_pending', 'true');
     }
 
     function closePaymentModal() { document.getElementById('payModal').style.display = 'none'; }
 
+    function updateReferralDisplay() {
+        document.getElementById('referralCountText').innerText = "Total Valid Refers: " + validReferralCount;
+    }
+
     function shareReferralLink() {
-        var link = "Join FABA Engine Pro! Use my referral code FABA-REF-7892: https://faba-engine-v5.vercel.app";
+        validReferralCount++;
+        localStorage.setItem('faba_valid_ref_count', validReferralCount);
+        updateReferralDisplay();
+
+        if(validReferralCount === 12) {
+            alert("🎉 Milestone Reached! You have unlocked 1 Month Free Subscription!");
+        } else if(validReferralCount === 365) {
+            alert("👑 Legendary Milestone Reached! You have unlocked 1 Year Free Subscription!");
+        }
+
+        var link = "Join FABA Engine Pro! Get 10% OFF on your 1st subscription using my link: https://faba-engine.vercel.app";
         if(navigator.share) {
-            navigator.share({ title: 'FABA Engine', text: link, url: 'https://faba-engine-v5.vercel.app' });
+            navigator.share({ title: 'FABA Engine Referral', text: link, url: 'https://faba-engine.vercel.app' });
         } else {
             prompt("Copy & Share Referral Link:", link);
         }
@@ -811,7 +997,7 @@
         if(email === "faba.engine.business@gmail.com" && pin === "Farhan2012") {
             localStorage.setItem('faba_master_active', 'true');
             checkMasterSessionState();
-            alert("Welcome Master Farhan!");
+            alert("Welcome Master Farhan! Unlimited Lifetime Owner Access Granted.");
         } else {
             alert("Access Denied: Invalid Master Credentials!");
         }
