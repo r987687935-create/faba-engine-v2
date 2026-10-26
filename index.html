@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FABA Engine Enterprise V15 - Ultimate Master Pro</title>
+    <title>FABA Engine Enterprise V16 - Ultimate Master Pro</title>
     <style>
         :root {
             --bg-color: #f8fafc;
@@ -566,15 +566,15 @@
     </div>
 </div>
 
-<!-- MODERN SPOTIFY/YOUTUBE STYLE PAYMENT GATEWAY MODAL -->
+<!-- PROFESSIONAL INTENT & APP-PUSH PAYMENT GATEWAY MODAL -->
 <div class="modal" id="payModal">
     <div class="modal-body">
-        <h3 style="color:var(--primary-color); margin-bottom:4px;">💳 Secure UPI & Auto-Pay Checkout</h3>
+        <h3 style="color:var(--primary-color); margin-bottom:4px;">💳 Secure UPI Intent & Auto-Pay Gateway</h3>
         <p id="checkoutPlanTitle" style="font-size:12px; font-weight:bold; color:var(--text);"></p>
         <p id="checkoutDiscountNote" style="font-size:11px; color:var(--success-color); font-weight:bold; margin-top:2px;"></p>
         
         <div class="input-group" style="text-align:left; margin-top:10px;">
-            <label>Select Payment App (Pay with App):</label>
+            <label>Select Payment App (Direct App Push):</label>
             <div class="payment-app-grid">
                 <div class="pay-app-tile selected" onclick="selectPaymentApp('PhonePe', this)">PhonePe</div>
                 <div class="pay-app-tile" onclick="selectPaymentApp('GooglePay', this)">Google Pay</div>
@@ -597,7 +597,7 @@
 
         <p id="checkoutAmountDisplay" style="font-size:14px; font-weight:900; color:var(--primary-color); margin-bottom:8px;"></p>
         
-        <a id="checkoutDirectUpiBtn" href="#" class="btn-main" style="display:block; text-decoration:none; margin-top:8px;">Pay Now with Selected App 📲</a>
+        <button class="btn-main" onclick="executeDirectAppPayment()" style="margin-top:8px;">Open App & Pay Now 📲</button>
         <button class="btn-main btn-secondary" onclick="closePaymentModal()">Cancel Transaction ❌</button>
     </div>
 </div>
@@ -644,6 +644,7 @@
     var selectedPaymentAppEnum = "PhonePe";
     var currentCheckoutBasePrice = 499;
     var currentCheckoutPlanTitle = "Standard Edition";
+    var finalCalculatedPayAmount = 499;
 
     window.onload = function() {
         checkUserLoginState();
@@ -678,7 +679,6 @@
             alert("Please enter a valid 10-digit mobile number!");
             return;
         }
-        // Generate random 4-digit OTP specific to this login attempt
         activeGeneratedOtp = Math.floor(1000 + Math.random() * 9000).toString();
         document.getElementById('phoneStep').style.display = 'none';
         document.getElementById('otpStep').style.display = 'block';
@@ -1208,7 +1208,7 @@
         }
     }
 
-    /* SPOTIFY / YOUTUBE STYLE MODERN PAYMENT GATEWAY & AUTO-PAY */
+    /* DIRECT APP-PUSH & UPI INTENT GATEWAY */
     function triggerSubscriptionCheckout(price, planTitle) {
         currentCheckoutBasePrice = price;
         currentCheckoutPlanTitle = planTitle;
@@ -1237,11 +1237,11 @@
         var price = currentCheckoutBasePrice;
         var planTitle = currentCheckoutPlanTitle;
         var isAutoPayEnabled = document.getElementById('autoPayCheckbox').checked;
-        var finalPrice = price;
+        finalCalculatedPayAmount = price;
         var discountText = "";
 
         if(validReferralCount >= 12 && price === 499) {
-            finalPrice = 0;
+            finalCalculatedPayAmount = 0;
             discountText = "🎁 12 Refers Milestone Unlocked: Standard Plan FREE!";
         } else {
             var appliedDiscount = 0;
@@ -1261,17 +1261,42 @@
             }
 
             if(appliedDiscount > 0) {
-                finalPrice = price - Math.round((price * appliedDiscount) / 100);
+                finalCalculatedPayAmount = price - Math.round((price * appliedDiscount) / 100);
             }
         }
 
         document.getElementById('checkoutPlanTitle').innerText = planTitle + " (Original: ₹" + price + ")";
         document.getElementById('checkoutDiscountNote').innerText = discountText;
-        document.getElementById('checkoutAmountDisplay').innerText = "Total Payable via " + selectedPaymentAppEnum + ": ₹" + finalPrice;
+        document.getElementById('checkoutAmountDisplay').innerText = "Total Payable via " + selectedPaymentAppEnum + ": ₹" + finalCalculatedPayAmount;
 
-        var upiLink = "upi://pay?pa=" + encodeURIComponent(masterOwnerUpi) + "&pn=FABA_Store&am=" + finalPrice + "&cu=INR";
-        document.getElementById('checkoutDirectUpiBtn').href = upiLink;
-        document.getElementById('checkoutQrImg').src = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=" + encodeURIComponent(upiLink);
+        var standardUpiLink = "upi://pay?pa=" + encodeURIComponent(masterOwnerUpi) + "&pn=FABA_Store&am=" + finalCalculatedPayAmount + "&cu=INR";
+        document.getElementById('checkoutQrImg').src = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=" + encodeURIComponent(standardUpiLink);
+    }
+
+    function executeDirectAppPayment() {
+        var pa = encodeURIComponent(masterOwnerUpi);
+        var am = finalCalculatedPayAmount;
+        var pn = encodeURIComponent("FABA Store Subscription");
+        
+        var intentUrl = "";
+        if(selectedPaymentAppEnum === 'PhonePe') {
+            intentUrl = "phonepe://pay?pa=" + pa + "&pn=" + pn + "&am=" + am + "&cu=INR";
+        } else if(selectedPaymentAppEnum === 'GooglePay') {
+            intentUrl = "tez://upi/pay?pa=" + pa + "&pn=" + pn + "&am=" + am + "&cu=INR";
+        } else if(selectedPaymentAppEnum === 'Paytm') {
+            intentUrl = "paytmmp://pay?pa=" + pa + "&pn=" + pn + "&am=" + am + "&cu=INR";
+        } else {
+            intentUrl = "upi://pay?pa=" + pa + "&pn=" + pn + "&am=" + am + "&cu=INR";
+        }
+
+        // Try launching app push intent
+        window.location.href = intentUrl;
+
+        // Fallback safety prompt if app doesn't open immediately
+        setTimeout(function() {
+            var fallbackLink = "upi://pay?pa=" + masterOwnerUpi + "&pn=FABA_Store&am=" + am + "&cu=INR";
+            window.open(fallbackLink, '_blank');
+        }, 1500);
     }
 
     function closePaymentModal() { document.getElementById('payModal').style.display = 'none'; }
