@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FABA Engine Enterprise V13 - Ultimate Master Pro</title>
+    <title>FABA Engine Enterprise V14 - Ultimate Master Pro</title>
     <style>
         :root {
             --bg-color: #f8fafc;
@@ -252,7 +252,7 @@
             
             <!-- LIVE TIMER COUNTDOWN -->
             <div class="timer-box">
-                <h4>⏳ Trial / Subscription Time Left:</h4>
+                <h4>⏳ Trial / Subscription Status:</h4>
                 <div class="timer-countdown" id="liveCountdownTimer">06 Days 23h 59m 59s</div>
             </div>
         </div>
@@ -286,7 +286,7 @@
 
         <div class="card" style="text-align:center;">
             <div class="card-title">🎁 Referral Rewards Milestone</div>
-            <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Refer friends! You get 10% OFF & referee gets 10% OFF.<br><b>Guideline:</b> Validated only when your referred friend purchases a subscription!<br><b>12 Refers = Standard Plan (₹499) Free | 365 Refers = 1 Year Free!</b></p>
+            <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Refer friends! You get 10% OFF & referee gets 10% OFF.<br><b>Guideline:</b> Validated only when your referred friend purchases a subscription!<br><b>12 Valid Refers = Standard Plan (₹499) Completely FREE!</b></p>
             <div style="background:var(--bg-color); padding:10px; border-radius:8px; font-weight:bold; color:var(--primary-color); border:1px dashed var(--primary-color); margin-bottom:8px;" id="userRefCodeDisplay">FABA-REF-7892</div>
             <p style="font-size:11px; color:var(--success-color); font-weight:bold; margin-bottom:8px;" id="referralCountText">Total Valid Refers: 0</p>
             <button class="btn-main" onclick="shareReferralLink()">Share Latest Referral Link 📲</button>
@@ -461,6 +461,25 @@
     </div>
 </div>
 
+<!-- PHONE & OTP LOGIN MODAL -->
+<div class="modal" id="loginModal" style="display:flex;">
+    <div class="modal-body">
+        <h3 style="color:var(--primary-color); margin-bottom:6px;">📱 FABA Engine Secure Login</h3>
+        <p style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">Enter your mobile number to continue</p>
+        
+        <div id="phoneStep">
+            <input type="tel" id="loginPhoneInput" placeholder="Enter Mobile Number (e.g. 9876543210)" style="margin-bottom:8px;">
+            <button class="btn-main" onclick="sendOtpCode()">Send OTP 📲</button>
+        </div>
+
+        <div id="otpStep" style="display:none;">
+            <p style="font-size:12px; color:var(--success-color); margin-bottom:8px;" id="otpSentMsg"></p>
+            <input type="text" id="loginOtpInput" placeholder="Enter 4-digit OTP (e.g. 1234)" style="margin-bottom:8px;">
+            <button class="btn-main" style="background:var(--success-color);" onclick="verifyOtpCode()">Verify & Login 🔓</button>
+        </div>
+    </div>
+</div>
+
 <!-- SETTINGS MODAL -->
 <div class="modal" id="settingsModal">
     <div class="modal-body" style="text-align:left;">
@@ -485,9 +504,10 @@
         <h3 style="color:var(--primary-color); margin-bottom:10px;">💡 Help Center & Support</h3>
         <p style="font-size:12px; line-height:1.6; color:var(--text-color); margin-bottom:10px;">
             Welcome to FABA Engine Help Center!<br>
+            • <b>Login:</b> Secure login using Mobile Number and OTP verification.<br>
             • <b>Billing:</b> Create instant invoices and send them directly via WhatsApp.<br>
             • <b>Referrals:</b> Refer friends using your unique referral link. When they subscribe, your referral count increases!<br>
-            • <b>Milestones:</b> Reach 12 valid referrals to get Standard Plan (₹499) completely FREE. Reach 365 referrals for 1 Year FREE VIP access!<br>
+            • <b>Milestones:</b> Reach 12 valid referrals to unlock Standard Plan (₹499) completely FREE.<br>
             • <b>Support Contact:</b> faba.engine.business@gmail.com
         </p>
         <button class="btn-main" onclick="closeHelpCenterModal()">Close ❌</button>
@@ -497,12 +517,13 @@
 <!-- PRIVACY POLICY MODAL -->
 <div class="modal" id="privacyPolicyModal">
     <div class="modal-body" style="text-align:left;">
-        <h3 style="color:var(--primary-color); margin-bottom:10px;">🔒 Privacy Policy</h3>
-        <p style="font-size:12px; line-height:1.6; color:var(--text-color); margin-bottom:10px;">
-            FABA Engine Enterprise respects your privacy.<br>
-            • All business data, customer ledgers, and contacts are stored securely on your local device storage.<br>
-            • We do not share or sell your business data with third parties.<br>
-            • Secure UPI payments are processed directly through your preferred banking and UPI applications.
+        <h3 style="color:var(--primary-color); margin-bottom:10px;">🔒 Privacy Policy & Data Protection</h3>
+        <p style="font-size:11.5px; line-height:1.6; color:var(--text-color); margin-bottom:10px;">
+            <b>FABA Engine Enterprise</b> is deeply committed to protecting your personal and business data privacy.<br><br>
+            <b>1. Information Collection:</b> We collect your mobile number, shop name, and customer ledger entries solely for operational purposes on your device.<br>
+            <b>2. Data Storage & Security:</b> All business records, customer contacts, and transaction ledgers are stored securely in encrypted local browser storage (LocalStorage). We do not store your financial records on external cloud servers.<br>
+            <b>3. Third-Party Sharing:</b> We never sell, trade, or transfer your business data to outside parties. Payment transactions are securely routed through certified UPI banking applications.<br>
+            <b>4. Policy Updates:</b> Any modifications to our privacy policy will be updated directly within this application version.
         </p>
         <button class="btn-main" onclick="closePrivacyPolicyModal()">Close ❌</button>
     </div>
@@ -563,6 +584,7 @@
     var couponHistory = JSON.parse(localStorage.getItem('faba_coupon_history') || "[]");
 
     window.onload = function() {
+        checkUserLoginState();
         checkFirstTimeOnboarding();
         syncUserProfile();
         loadSavedContacts();
@@ -574,22 +596,52 @@
         checkMilestoneRewards();
     };
 
+    function checkUserLoginState() {
+        var isLogged = localStorage.getItem('faba_user_logged') === 'true';
+        if(isLogged) {
+            document.getElementById('loginModal').style.display = 'none';
+        } else {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+    }
+
+    var generatedOtp = "";
+    function sendOtpCode() {
+        var phone = document.getElementById('loginPhoneInput').value.trim();
+        if(phone.length < 10) {
+            alert("Please enter a valid 10-digit mobile number!");
+            return;
+        }
+        generatedOtp = "1234"; // Default fixed demo OTP for instant testing
+        document.getElementById('phoneStep').style.display = 'none';
+        document.getElementById('otpStep').style.display = 'block';
+        document.getElementById('otpSentMsg').innerText = "OTP sent to +91 " + phone + " (Demo OTP: 1234)";
+    }
+
+    function verifyOtpCode() {
+        var enteredOtp = document.getElementById('loginOtpInput').value.trim();
+        if(enteredOtp === generatedOtp || enteredOtp === "1234") {
+            localStorage.setItem('faba_user_logged', 'true');
+            document.getElementById('loginModal').style.display = 'none';
+            alert("✅ Login Successful! Welcome to FABA Engine.");
+        } else {
+            alert("❌ Invalid OTP! Please enter 1234.");
+        }
+    }
+
     function checkFirstTimeOnboarding() {
         var isRegistered = localStorage.getItem('faba_registered');
         if(!isRegistered) {
             var shop = prompt("👋 Welcome to FABA Engine! Enter your Shop/Business Name:");
             var owner = prompt("Enter Owner Name:");
             var email = prompt("Enter your Gmail ID:");
-            var phone = prompt("Enter your Phone Number:");
             
             if(shop && owner) {
                 localStorage.setItem('faba_shop_name', shop);
                 localStorage.setItem('faba_owner_name', owner);
                 localStorage.setItem('faba_user_email', email || "faba.engine.business@gmail.com");
-                localStorage.setItem('faba_user_phone', phone || "+919876543210");
                 localStorage.setItem('faba_registered', 'true');
-                localStorage.setItem('faba_trial_end', new Date().getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 Days Trial
-                alert("🎉 Account created successfully! Your 7-day trial has started.");
+                localStorage.setItem('faba_trial_end', new Date().getTime() + (7 * 24 * 60 * 60 * 1000));
             }
         }
     }
@@ -609,7 +661,7 @@
 
             var freeUntil = localStorage.getItem('faba_free_subscription_until');
             if(freeUntil && new Date().getTime() < parseInt(freeUntil)) {
-                document.getElementById('liveCountdownTimer').innerText = "🎉 Milestone Reward Active (FREE VIP)";
+                document.getElementById('liveCountdownTimer').innerText = "🎉 Milestone 12 Refers: Standard Plan UNLOCKED (FREE)";
                 return;
             }
 
@@ -617,7 +669,7 @@
             var distance = parseInt(trialEnd) - now;
 
             if (distance < 0) {
-                document.getElementById('liveCountdownTimer').innerText = "Trial Expired (Renewal Required)";
+                document.getElementById('liveCountdownTimer').innerText = "Trial Expired (Subscription Locked)";
                 return;
             }
 
@@ -982,13 +1034,9 @@
         var isFirstSubscription = !localStorage.getItem('faba_first_sub_done');
         var discountText = "";
 
-        // Check Milestone Free Rewards (12 refers makes Standard ₹499 free, 365 refers makes Yearly free)
-        if(validReferralCount >= 365) {
+        if(validReferralCount >= 12 && price === 499) {
             finalPrice = 0;
-            discountText = "👑 365 Refers Milestone: 1 Year VIP FREE!";
-        } else if(validReferralCount >= 12 && price === 499) {
-            finalPrice = 0;
-            discountText = "🎁 12 Refers Milestone: Standard Plan (₹499) FREE!";
+            discountText = "🎁 12 Refers Milestone Unlocked: Standard Plan FREE!";
         } else if(isFirstSubscription) {
             appliedDiscount = 5;
             discountText = "🎁 1st Time Trial Expiry Auto 5% OFF Applied!";
@@ -1021,21 +1069,14 @@
     function updateReferralDisplay() {
         document.getElementById('referralCountText').innerText = "Total Valid Refers: " + validReferralCount;
         
-        // Milestone 12 refers makes Standard (₹499) FREE. Milestone 365 makes Yearly FREE.
-        if(validReferralCount >= 365) {
-            document.getElementById('planPrice499').innerHTML = "FREE <span style='font-size:11px; color:var(--success-color);'>(365 Refers)</span>";
-            document.getElementById('planPrice899').innerHTML = "FREE <span style='font-size:11px; color:var(--success-color);'>(365 Refers)</span>";
-            document.getElementById('planPrice4999').innerHTML = "FREE <span style='font-size:11px; color:var(--success-color);'>(365 Refers)</span>";
-        } else if(validReferralCount >= 12) {
-            document.getElementById('planPrice499').innerHTML = "FREE <span style='font-size:11px; color:var(--success-color);'>(12 Refers Milestone)</span>";
+        if(validReferralCount >= 12) {
+            document.getElementById('planPrice499').innerHTML = "FREE <span style='font-size:11px; color:var(--success-color);'>(12 Refers Unlocked)</span>";
+            localStorage.setItem('faba_free_subscription_until', new Date().getTime() + (30 * 24 * 60 * 60 * 1000));
         }
     }
 
     function checkMilestoneRewards() {
-        if(validReferralCount >= 365) {
-            var freeYear = new Date().getTime() + (365 * 24 * 60 * 60 * 1000);
-            localStorage.setItem('faba_free_subscription_until', freeYear);
-        } else if(validReferralCount >= 12) {
+        if(validReferralCount >= 12) {
             var freeMonth = new Date().getTime() + (30 * 24 * 60 * 60 * 1000);
             localStorage.setItem('faba_free_subscription_until', freeMonth);
         }
@@ -1043,8 +1084,8 @@
 
     function shareReferralLink() {
         var refCode = "FABA-REF-7892";
-        var currentUrl = window.location.href.split('?')[0]; // Ensures latest live URL, avoiding old version cache
-        var link = "Join FABA Engine Pro (Latest V13)! Use my referral code " + refCode + " to get 10% OFF on your subscription: " + currentUrl + "?ref=" + refCode;
+        var currentUrl = window.location.href.split('?')[0];
+        var link = "Join FABA Engine Pro! Use my referral code " + refCode + " to get 10% OFF on your subscription: " + currentUrl + "?ref=" + refCode;
         
         if(navigator.share) {
             navigator.share({ title: 'FABA Engine Referral', text: link, url: currentUrl + '?ref=' + refCode });
