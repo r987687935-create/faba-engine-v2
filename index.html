@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FABA Engine Enterprise V11 - Ultimate English Master Pro</title>
+    <title>FABA Engine Enterprise V13 - Ultimate Master Pro</title>
     <style>
         :root {
             --bg-color: #f8fafc;
@@ -278,12 +278,18 @@
             <button class="btn-main" onclick="updateUserProfileData()">Save Profile & Shop 💾</button>
         </div>
 
+        <!-- HELP CENTER & PRIVACY POLICY BUTTONS IN PROFILE -->
+        <div class="card" style="display:flex; gap:10px;">
+            <button class="btn-main" style="background:var(--success-color); margin-top:0;" onclick="openHelpCenterModal()">💡 Help Center</button>
+            <button class="btn-main" style="background:var(--text-muted); margin-top:0;" onclick="openPrivacyPolicyModal()">🔒 Privacy Policy</button>
+        </div>
+
         <div class="card" style="text-align:center;">
             <div class="card-title">🎁 Referral Rewards Milestone</div>
-            <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Refer friends! You get 20% OFF & they get 10% OFF.<br>12 Refers = 1 Month Free | 365 Refers = 1 Year Free!</p>
+            <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Refer friends! You get 10% OFF & referee gets 10% OFF.<br><b>Guideline:</b> Validated only when your referred friend purchases a subscription!<br><b>12 Refers = Standard Plan (₹499) Free | 365 Refers = 1 Year Free!</b></p>
             <div style="background:var(--bg-color); padding:10px; border-radius:8px; font-weight:bold; color:var(--primary-color); border:1px dashed var(--primary-color); margin-bottom:8px;" id="userRefCodeDisplay">FABA-REF-7892</div>
             <p style="font-size:11px; color:var(--success-color); font-weight:bold; margin-bottom:8px;" id="referralCountText">Total Valid Refers: 0</p>
-            <button class="btn-main" onclick="shareReferralLink()">Share Referral on WhatsApp 📲</button>
+            <button class="btn-main" onclick="shareReferralLink()">Share Latest Referral Link 📲</button>
         </div>
     </div>
 
@@ -408,38 +414,38 @@
             <div class="prem-card">
                 <div class="prem-badge">STANDARD</div>
                 <h4>Standard Edition</h4>
-                <div class="prem-price">₹499 <span style="font-size:11px; color:var(--text-muted);">/ Month</span></div>
+                <div class="prem-price" id="planPrice499">₹499 <span style="font-size:11px; color:var(--text-muted);">/ Month</span></div>
                 <ul class="feature-list">
                     <li>✓ Core WhatsApp Billing & Invoices</li>
                     <li>✓ 100 Customer Contacts CRM</li>
                     <li>✓ Automatic 5% Discount on 1st Trial Expiry</li>
                 </ul>
-                <button class="btn-main" style="margin-top:8px;" onclick="triggerSubscriptionCheckout(499, 'Standard Edition')">Select Standard ₹499 💳</button>
+                <button class="btn-main" style="margin-top:8px;" onclick="triggerSubscriptionCheckout(499, 'Standard Edition')" id="btnPlan499">Select Standard 💳</button>
             </div>
 
             <div class="prem-card featured">
                 <div class="prem-badge">POPULAR</div>
                 <h4>Premium+ Suite</h4>
-                <div class="prem-price">₹899 <span style="font-size:11px; color:var(--text-muted);">/ Month</span></div>
+                <div class="prem-price" id="planPrice899">₹899 <span style="font-size:11px; color:var(--text-muted);">/ Month</span></div>
                 <ul class="feature-list">
                     <li>✓ Unlimited Bulk WhatsApp Broadcast</li>
                     <li>✓ All 8+ Working Business Tools Suite</li>
                     <li>✓ Gemstone & Marble Calculator Engine</li>
                     <li>✓ Automatic 5% Discount on 1st Trial Expiry</li>
                 </ul>
-                <button class="btn-main" style="margin-top:8px;" onclick="triggerSubscriptionCheckout(899, 'Premium+ Suite')">Select Premium+ ₹899 💳</button>
+                <button class="btn-main" style="margin-top:8px;" onclick="triggerSubscriptionCheckout(899, 'Premium+ Suite')">Select Premium+ 💳</button>
             </div>
 
             <div class="prem-card">
                 <div class="prem-badge">YEARLY</div>
                 <h4>Legendary Enterprise</h4>
-                <div class="prem-price">₹4,999 <span style="font-size:11px; color:var(--text-muted);">/ Year</span></div>
+                <div class="prem-price" id="planPrice4999">₹4,999 <span style="font-size:11px; color:var(--text-muted);">/ Year</span></div>
                 <ul class="feature-list">
                     <li>✓ Full Year Unlocked VIP Access</li>
                     <li>✓ Priority Owner Support & Multi-Staff Support</li>
                     <li>✓ Automatic 5% Discount on 1st Trial Expiry</li>
                 </ul>
-                <button class="btn-main" style="margin-top:8px;" onclick="triggerSubscriptionCheckout(4999, 'Legendary Enterprise')">Select Legendary ₹4,999 💳</button>
+                <button class="btn-main" style="margin-top:8px;" onclick="triggerSubscriptionCheckout(4999, 'Legendary Enterprise')" id="btnPlan4999">Select Legendary 💳</button>
             </div>
         </div>
     </div>
@@ -467,12 +473,42 @@
                 <option value="gold">Royal Gold Theme</option>
             </select>
         </div>
-        <button class="btn-main" onclick="closeSettingsModal()">Save Settings 💾</button>
-        <button class="btn-main btn-secondary" onclick="closeSettingsModal()">Close ❌</button>
+        <button class="btn-main" style="background:var(--success-color); margin-bottom:6px;" onclick="openHelpCenterModal()">💡 Help Center</button>
+        <button class="btn-main" style="background:var(--text-muted); margin-bottom:6px;" onclick="openPrivacyPolicyModal()">🔒 Privacy Policy</button>
+        <button class="btn-main" onclick="closeSettingsModal()">Save & Close 💾</button>
     </div>
 </div>
 
-<!-- PAYMENT GATEWAY MODAL WITH AUTOMATIC DISCOUNT & QR DETAILS -->
+<!-- HELP CENTER MODAL -->
+<div class="modal" id="helpCenterModal">
+    <div class="modal-body" style="text-align:left;">
+        <h3 style="color:var(--primary-color); margin-bottom:10px;">💡 Help Center & Support</h3>
+        <p style="font-size:12px; line-height:1.6; color:var(--text-color); margin-bottom:10px;">
+            Welcome to FABA Engine Help Center!<br>
+            • <b>Billing:</b> Create instant invoices and send them directly via WhatsApp.<br>
+            • <b>Referrals:</b> Refer friends using your unique referral link. When they subscribe, your referral count increases!<br>
+            • <b>Milestones:</b> Reach 12 valid referrals to get Standard Plan (₹499) completely FREE. Reach 365 referrals for 1 Year FREE VIP access!<br>
+            • <b>Support Contact:</b> faba.engine.business@gmail.com
+        </p>
+        <button class="btn-main" onclick="closeHelpCenterModal()">Close ❌</button>
+    </div>
+</div>
+
+<!-- PRIVACY POLICY MODAL -->
+<div class="modal" id="privacyPolicyModal">
+    <div class="modal-body" style="text-align:left;">
+        <h3 style="color:var(--primary-color); margin-bottom:10px;">🔒 Privacy Policy</h3>
+        <p style="font-size:12px; line-height:1.6; color:var(--text-color); margin-bottom:10px;">
+            FABA Engine Enterprise respects your privacy.<br>
+            • All business data, customer ledgers, and contacts are stored securely on your local device storage.<br>
+            • We do not share or sell your business data with third parties.<br>
+            • Secure UPI payments are processed directly through your preferred banking and UPI applications.
+        </p>
+        <button class="btn-main" onclick="closePrivacyPolicyModal()">Close ❌</button>
+    </div>
+</div>
+
+<!-- PAYMENT GATEWAY MODAL -->
 <div class="modal" id="payModal">
     <div class="modal-body">
         <h3 style="color:var(--primary-color); margin-bottom:4px;">💳 Secure UPI Checkout</h3>
@@ -535,6 +571,7 @@
         updateReferralDisplay();
         startLiveCountdownTimer();
         renderCouponHistory();
+        checkMilestoneRewards();
     };
 
     function checkFirstTimeOnboarding() {
@@ -570,8 +607,14 @@
                 return;
             }
 
+            var freeUntil = localStorage.getItem('faba_free_subscription_until');
+            if(freeUntil && new Date().getTime() < parseInt(freeUntil)) {
+                document.getElementById('liveCountdownTimer').innerText = "🎉 Milestone Reward Active (FREE VIP)";
+                return;
+            }
+
             var now = new Date().getTime();
-            var distance = trialEnd - now;
+            var distance = parseInt(trialEnd) - now;
 
             if (distance < 0) {
                 document.getElementById('liveCountdownTimer').innerText = "Trial Expired (Renewal Required)";
@@ -627,9 +670,15 @@
         if(btnElem) btnElem.classList.add('active');
     }
 
-    /* SETTINGS MODAL */
+    /* SETTINGS, HELP CENTER & PRIVACY POLICY MODALS */
     function openSettingsModal() { document.getElementById('settingsModal').style.display = 'flex'; }
     function closeSettingsModal() { document.getElementById('settingsModal').style.display = 'none'; }
+    
+    function openHelpCenterModal() { document.getElementById('helpCenterModal').style.display = 'flex'; }
+    function closeHelpCenterModal() { document.getElementById('helpCenterModal').style.display = 'none'; }
+
+    function openPrivacyPolicyModal() { document.getElementById('privacyPolicyModal').style.display = 'flex'; }
+    function closePrivacyPolicyModal() { document.getElementById('privacyPolicyModal').style.display = 'none'; }
 
     function changeAppTheme() {
         var theme = document.getElementById('themeSelector').value;
@@ -852,7 +901,7 @@
         document.getElementById('resQr').innerHTML = "<img src='" + qrUrl + "' style='border-radius:10px; border:1px solid #cbd5e1;'><br><a href='" + link + "' class='btn-main' style='display:inline-block; text-decoration:none; margin-top:6px;'>Pay via UPI App</a>";
     }
 
-    /* SCRATCH SUB-TABS (Scratch Card & History) */
+    /* SCRATCH SUB-TABS */
     function switchScratchSubTab(subTab) {
         if(subTab === 'scratch') {
             document.getElementById('subBtnScratch').classList.add('active');
@@ -884,7 +933,7 @@
             return;
         }
 
-        var randRoll = Math.random() * 100; // 0 to 100%
+        var randRoll = Math.random() * 100;
         if(randRoll < 90) {
             scratchDiscountPercent = Math.random() < 0.5 ? 5 : 10;
         } else {
@@ -896,7 +945,6 @@
         localStorage.setItem('faba_card_scratched', 'true');
         localStorage.setItem('faba_saved_scratch_pct', scratchDiscountPercent);
         
-        // Save to History
         couponHistory.push({ percent: scratchDiscountPercent, date: new Date().toLocaleDateString() });
         localStorage.setItem('faba_coupon_history', JSON.stringify(couponHistory));
         renderCouponHistory();
@@ -934,15 +982,22 @@
         var isFirstSubscription = !localStorage.getItem('faba_first_sub_done');
         var discountText = "";
 
-        if(isFirstSubscription) {
-            appliedDiscount = 5; // First time subscription auto 5% discount
+        // Check Milestone Free Rewards (12 refers makes Standard ₹499 free, 365 refers makes Yearly free)
+        if(validReferralCount >= 365) {
+            finalPrice = 0;
+            discountText = "👑 365 Refers Milestone: 1 Year VIP FREE!";
+        } else if(validReferralCount >= 12 && price === 499) {
+            finalPrice = 0;
+            discountText = "🎁 12 Refers Milestone: Standard Plan (₹499) FREE!";
+        } else if(isFirstSubscription) {
+            appliedDiscount = 5;
             discountText = "🎁 1st Time Trial Expiry Auto 5% OFF Applied!";
+            finalPrice = price - Math.round((price * appliedDiscount) / 100);
         } else if(scratchDiscountPercent > 0) {
-            appliedDiscount = scratchDiscountPercent; // Renewal scratch card discount
+            appliedDiscount = scratchDiscountPercent;
             discountText = "🎁 Renewal Scratch Coupon " + scratchDiscountPercent + "% OFF Applied!";
+            finalPrice = price - Math.round((price * appliedDiscount) / 100);
         }
-
-        finalPrice = price - Math.round((price * appliedDiscount) / 100);
 
         document.getElementById('checkoutPlanTitle').innerText = planTitle + " (Original: ₹" + price + ")";
         document.getElementById('checkoutDiscountNote').innerText = discountText;
@@ -955,30 +1010,57 @@
         
         localStorage.setItem('faba_first_sub_done', 'true');
         localStorage.setItem('faba_renewal_pending', 'true');
+
+        setTimeout(function() {
+            completeValidReferral();
+        }, 3000);
     }
 
     function closePaymentModal() { document.getElementById('payModal').style.display = 'none'; }
 
     function updateReferralDisplay() {
         document.getElementById('referralCountText').innerText = "Total Valid Refers: " + validReferralCount;
+        
+        // Milestone 12 refers makes Standard (₹499) FREE. Milestone 365 makes Yearly FREE.
+        if(validReferralCount >= 365) {
+            document.getElementById('planPrice499').innerHTML = "FREE <span style='font-size:11px; color:var(--success-color);'>(365 Refers)</span>";
+            document.getElementById('planPrice899').innerHTML = "FREE <span style='font-size:11px; color:var(--success-color);'>(365 Refers)</span>";
+            document.getElementById('planPrice4999').innerHTML = "FREE <span style='font-size:11px; color:var(--success-color);'>(365 Refers)</span>";
+        } else if(validReferralCount >= 12) {
+            document.getElementById('planPrice499').innerHTML = "FREE <span style='font-size:11px; color:var(--success-color);'>(12 Refers Milestone)</span>";
+        }
+    }
+
+    function checkMilestoneRewards() {
+        if(validReferralCount >= 365) {
+            var freeYear = new Date().getTime() + (365 * 24 * 60 * 60 * 1000);
+            localStorage.setItem('faba_free_subscription_until', freeYear);
+        } else if(validReferralCount >= 12) {
+            var freeMonth = new Date().getTime() + (30 * 24 * 60 * 60 * 1000);
+            localStorage.setItem('faba_free_subscription_until', freeMonth);
+        }
     }
 
     function shareReferralLink() {
-        validReferralCount++;
-        localStorage.setItem('faba_valid_ref_count', validReferralCount);
-        updateReferralDisplay();
-
-        if(validReferralCount === 12) {
-            alert("🎉 Milestone Reached! You have unlocked 1 Month Free Subscription!");
-        } else if(validReferralCount === 365) {
-            alert("👑 Legendary Milestone Reached! You have unlocked 1 Year Free Subscription!");
-        }
-
-        var link = "Join FABA Engine Pro! Get 10% OFF on your 1st subscription using my link: https://faba-engine.vercel.app";
+        var refCode = "FABA-REF-7892";
+        var currentUrl = window.location.href.split('?')[0]; // Ensures latest live URL, avoiding old version cache
+        var link = "Join FABA Engine Pro (Latest V13)! Use my referral code " + refCode + " to get 10% OFF on your subscription: " + currentUrl + "?ref=" + refCode;
+        
         if(navigator.share) {
-            navigator.share({ title: 'FABA Engine Referral', text: link, url: 'https://faba-engine.vercel.app' });
+            navigator.share({ title: 'FABA Engine Referral', text: link, url: currentUrl + '?ref=' + refCode });
         } else {
-            prompt("Copy & Share Referral Link:", link);
+            prompt("Copy & Share Latest Referral Link (Guideline: Count increases when your friend purchases a subscription):", link);
+        }
+    }
+
+    function completeValidReferral() {
+        var isReferredUser = localStorage.getItem('faba_used_referral_code');
+        if(isReferredUser && !localStorage.getItem('faba_referral_counted')) {
+            validReferralCount++;
+            localStorage.setItem('faba_valid_ref_count', validReferralCount);
+            localStorage.setItem('faba_referral_counted', 'true');
+            updateReferralDisplay();
+            checkMilestoneRewards();
         }
     }
 
